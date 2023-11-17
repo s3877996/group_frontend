@@ -5,7 +5,7 @@ npm i react-router-dom.\
 npm i axios.\
 npm i react-icons.\
 npm i react-auth-kit.\
-npm install @mui/material @emotion/react @emotion/styled --force.\
+npm install @mui/material @emotion/react @emotion/styled --force.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
