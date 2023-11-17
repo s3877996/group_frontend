@@ -1,6 +1,6 @@
 # Getting Started with Create React App
 
-If you cannot run the React app, install all of these dependencies.
+If you cannot run the React app, install all of these dependencies.\
 npm i react-router-dom.\
 npm i axios.\
 npm i react-icons.\
