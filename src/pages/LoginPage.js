@@ -42,7 +42,7 @@ const LoginPage = () => {
                 navigate("/admin");
             }
             else {
-                navigate("/home")
+                navigate("/home");
             
             }
 
