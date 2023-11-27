@@ -3,6 +3,23 @@ import {AiOutlineMenu} from 'react-icons/ai'
 import Avatar from './Avatar'
 import MenuItem from './MenuItem'
 import { useNavigate } from 'react-router-dom';
+import {
+    CubeTransparentIcon,
+    UserCircleIcon,
+    CodeBracketSquareIcon,
+    Square3Stack3DIcon,
+    ChevronDownIcon,
+    Cog6ToothIcon,
+    InboxArrowDownIcon,
+    LifebuoyIcon,
+    PowerIcon,
+    RocketLaunchIcon,
+    Bars2Icon,
+    ReceiptRefundIcon,
+    HomeIcon,
+    CreditCardIcon,
+   
+} from "@heroicons/react/24/solid";
 //import { MenuItem } from '@mui/material';
 
 const UserMenu = () =>{
@@ -35,8 +52,12 @@ const UserMenu = () =>{
 
                     <div className="flex flex-col cursor-pointer">
                     <>
-                        <MenuItem onClick={toggleOpen} label="Login"/>
-                        <MenuItem onClick={handleSignOut} label="Sign Out"/>
+                        <MenuItem onClick={toggleOpen} label="Home" Icon={HomeIcon} />
+                        <MenuItem onClick={toggleOpen} label="My profile" Icon={UserCircleIcon}/>
+                        <MenuItem onClick={toggleOpen} label="My subcription" Icon={CreditCardIcon}/>
+                        <hr/>
+                        <MenuItem onClick={handleSignOut} label="Sign Out" Icon={() => <PowerIcon className="text-red-500 mr-2 h-5 w-5"/>} />
+
                      </>
                     </div>
                 </div>
