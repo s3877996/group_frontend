@@ -10,7 +10,7 @@ const HomeFooter = () => {
     const navigate = useNavigate();
     return (
         <div className="p-4">
-            <div className="h-[300px] bg-gray-300 p-[50px]">
+            <div className="h-[300px] bg-gray-200 p-[50px]">
                 <div className="max-w-[1000px] w-full mx-auto">
                     <div className="flex items-start text-black gap-x-[6rem] ">
                         <FooterItem
