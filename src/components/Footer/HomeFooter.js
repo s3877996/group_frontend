@@ -9,10 +9,10 @@ import { useNavigate } from "react-router-dom";
 const HomeFooter = () => {
     const navigate = useNavigate();
     return (
-        <div className="p-4">
-            <div className="h-[300px] bg-gray-200 p-[50px]">
+        <div className="p-4 bg-gray-200">
+            <div className="p-[50px]">
                 <div className="max-w-[1000px] w-full mx-auto">
-                    <div className="flex items-start text-black gap-x-[6rem] ">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
                         <FooterItem
                             title="Get Grammarly"
                             items={["Windows", "Desktop", "Mac"]}></FooterItem>
@@ -41,7 +41,7 @@ const HomeFooter = () => {
                                 "Help Center",
                             ]}>
                         </FooterItem>
-                        <div>
+                        <div className="col-span-full md:col-span-2 lg:col-span-1">
                             <FooterItem
                                 title="Contact"
                                 items={[
@@ -50,7 +50,6 @@ const HomeFooter = () => {
                                 ]}></FooterItem>
                             <p className="mt-4 font-semibold">
                                 Grammarly Social Contacts
-
                             </p>
                             <ul className="flex items-center mt-4 gap-x-4 md:gap-x-8">
                                 <li>
@@ -71,7 +70,6 @@ const HomeFooter = () => {
                 </div>
             </div>
         </div>
-
     );
 };
 
