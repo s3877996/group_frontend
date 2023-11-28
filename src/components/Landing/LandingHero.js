@@ -22,7 +22,7 @@ const LandingHero = () => {
       </div>
 
       <div>
-        <Link to="/">
+        <Link to="/login">
         <Button variant="contained" color="success" sx={{ 
             borderRadius: '50px', 
             textTransform: 'none', 

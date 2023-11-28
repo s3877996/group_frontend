@@ -13,6 +13,10 @@ import LandingPage from "./pages/LandingPage";
 const router = createBrowserRouter([
     {
         path: "/",
+        element: <LandingPage/>,
+    },
+    {
+        path: "/login",
         element: <LoginPage />,
     },
     {
@@ -23,10 +27,7 @@ const router = createBrowserRouter([
         path: "/admin",
         element: <AdminPage/>,
     },
-    {
-        path: "/landing",
-        element: <LandingPage/>,
-    },
+
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
