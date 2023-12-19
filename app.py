@@ -1,7 +1,14 @@
 from flask import Flask
-from server.main.home import home_bp
-from server.main.admin import admin_bp
+from flask_restful import Api
+from server.resources.routes import initialize_routes
 
 app = Flask(__name__)
-app.register_blueprint(home_bp)
-app.register_blueprint(admin_bp)
+api = Api(app)
+
+# Initialize database
+
+# Initialize API routes
+initialize_routes(api)
+
+# Start server
+app.run()
