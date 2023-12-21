@@ -33,6 +33,5 @@ def create_app(config_file='config.py'):
     app.register_blueprint(auth_blueprint, url_prefix='/api')
     app.register_blueprint(admins)
 
-
     # Run application
     return app
