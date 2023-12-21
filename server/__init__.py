@@ -1,6 +1,7 @@
 from flask import Flask, Blueprint
 from .database.db import db
 from server.resources.routes import auth_blueprint, jwt
+from .admin.routes import admins
 from flask_cors import CORS
 import os
 
@@ -30,5 +31,8 @@ def create_app(config_file='config.py'):
 
     # Register blueprint/routes
     app.register_blueprint(auth_blueprint, url_prefix='/api')
+    app.register_blueprint(admins)
 
+
+    # Run application
     return app
