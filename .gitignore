@@ -24,4 +24,3 @@ yarn-error.log*
 flask-server/.env
 *.pyc
 .vscode/launch.json
-server/.env
