@@ -1,5 +1,5 @@
 from flask import Blueprint
-from .services import (add_subscription_service, get_all_packages_service, get_package_by_id_service, update_package_by_id_service, delete_package_by_id_service)
+from .services import (add_subscription_service, get_all_packages_service, get_package_by_id_service, get_package_by_name_service, update_package_by_id_service, delete_package_by_id_service)
 
 admins = Blueprint('admin', __name__)
 
@@ -23,6 +23,11 @@ def get_all_packages():
 @admins.route('/admin/get_package/<int:package_id>', methods=['GET'])
 def get_package_by_id(package_id):
     return get_package_by_id_service(package_id)
+
+# Get package by name
+@admins.route('/admin/get_package', methods=['GET'])
+def get_package_by_name():
+    return get_package_by_name_service()
 
 # Update package by id
 @admins.route('/admin/update_package/<int:package_id>', methods=['PUT'])
