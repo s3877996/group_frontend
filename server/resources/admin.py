@@ -4,5 +4,5 @@ from flask_restful import Resource
 admin = Blueprint('admin', __name__)
 
 class AdminApi(Resource):
-    def admin():
+    def admin(self):
         return "This is admin page"

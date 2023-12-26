@@ -1,7 +1,7 @@
 import React, {useState , useCallback} from "react";
 import { useNavigate } from "react-router-dom";
 import {FcGoogle} from 'react-icons/fc';
-
+import axios from 'axios';
 // https://localhost:8080/api/auth/authenticate
 
 const LoginPage = () => {
@@ -10,51 +10,59 @@ const LoginPage = () => {
     // const signIn = useSignIn();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [token, setToken] = useState('');
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    //Handle submit button
-    const handleSubmit = useCallback (async (event) => {
-        event.preventDefault();
-
-        try{
-            // const response = await axios.post(
-            //     'http://localhost:8080/api/auth/authenticate',
-            //     {
-            //             email:email,
-            //             password:password,
-            //          }
-            // );
-            // console.log(response.data);
-            // localStorage.token = response.data.token;
-            // localStorage.role = response.data.role;
-            // localStorage.email = response.data.email;
-
-            // localStorage.profile = JSON.stringify(profileData);
-
-            // if(signIn({
-            //     token: response.data.token,
-            //     expiresIn: 3600,
-            //     tokenType: "Bearer",
-            //     authState: { email: email },
-            // }))
-
-            if (email === "admin") {
-                navigate("/admin");
+        try {
+          const response = await axios.post(
+            'http://localhost:5000/api/users/login',
+            {
+              email: email,
+              password: password,
             }
-            else {
-                navigate("/home");
-            
+          );
+
+          const { data } = response;
+          console.log(response)
+          if (data && data.data && data.data.token) {
+            // Save the token to state or local storage for future use
+            setToken(data.token);
+
+            // Check if the user information is directly available in the response
+            const userData = data.data ? data.data : data;
+
+            // Redirect to the desired page upon successful login
+            navigate('/home'); // Change '/dashboard' to the desired route
+
+            // Additional logic to handle user information if needed
+            console.log('User information:', userData);
+          } else {
+            // Handle the case where the backend did not provide a token
+            console.error('Authentication failed:', 'Token not present in the response');
+          }
+        } catch (error) {
+          // Handle network errors or other issues
+          console.error('Error during login:', error);
+
+          // Check if the error response contains data
+          if (error.response && error.response.data) {
+            const { data } = error.response;
+
+            // Check if the error response contains a token
+            if (data && data.token) {
+              // Handle the case where the backend provided a token unexpectedly
+              console.error('Unexpected token in the error response:', data.token);
+            } else {
+              // Handle the case where the expected token is not present
+              console.error('Expected token not present in the error response:', data);
             }
-
-            window.location.reload();
-
-        }catch (error){
-            console.log(error);
-            navigate("/");
+          } else {
+            console.error('No error response from server');
+          }
         }
-    });
-
-
+  };
 
     return (
         <div className="flex flex-row min-h-screen justify-center">
@@ -127,6 +135,10 @@ const LoginPage = () => {
                         <p className="text-decoration-line: underline">Don't have an account?</p>
                         <button className="py-2 px-5 text-white bg-green-600 font-bold border rounded-xl hover:scale-105 duration-300">Register</button>
                     </div>
+
+                    <br />
+                    {token && <p>Token: {token}</p>}
+
                 </div>
             </div>
             {/*Right hand side Container*/}
