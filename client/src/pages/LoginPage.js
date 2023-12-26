@@ -5,7 +5,8 @@ import axios from 'axios';
 // https://localhost:8080/api/auth/authenticate
 
 const LoginPage = () => {
-    // const API_URL = "https://localhost:8080/api/auth/authenticate"
+    // const API_URL = "http://localhost:5000/api/users/login"
+    const [error, setError] = useState(""); // State to store the error message
     const navigate = useNavigate();
     // const signIn = useSignIn();
     const [email, setEmail] = useState('');
@@ -26,6 +27,7 @@ const LoginPage = () => {
 
           const { data } = response;
           console.log(response)
+
           if (data && data.data && data.data.token) {
             // Save the token to state or local storage for future use
             setToken(data.token);
@@ -41,11 +43,13 @@ const LoginPage = () => {
           } else {
             // Handle the case where the backend did not provide a token
             console.error('Authentication failed:', 'Token not present in the response');
+
+            setError("Invalid email or password"); // Set error message
           }
         } catch (error) {
           // Handle network errors or other issues
           console.error('Error during login:', error);
-
+          setError("Invalid email or password"); // Set error message
           // Check if the error response contains data
           if (error.response && error.response.data) {
             const { data } = error.response;
@@ -60,6 +64,7 @@ const LoginPage = () => {
             }
           } else {
             console.error('No error response from server');
+            setError("Something went wrong. Please try again."); // Set a generic error message
           }
         }
   };
@@ -105,6 +110,9 @@ const LoginPage = () => {
                                 onChange={(e) => setPassword(e.target.value)}/>
                         </div>
                         {/*Password*/}
+
+                        {/* Display the error message with Tailwind CSS */}
+                        {error && <div className="text-red-500">{error}</div>}
 
                         {/*Login button*/}
                         <div className="flex flex-col text-white py-2 bg-green-600 rounded-lg font-bold hover:bg-green-700 hover:scale-105 duration-300">
