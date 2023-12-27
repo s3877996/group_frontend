@@ -6,10 +6,15 @@ from flask import request, make_response
 from server.database.db import db
 from server.database.models import Package
 from server.database.schema import PackageSchema
+from server.database.models import User
+from server.database.schema import UserSchema
 from sqlalchemy.sql import func
 
 package_schema = PackageSchema()
 packages_schema = PackageSchema(many=True)
+
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
 
 # Manage subscriptions
 # Add package
@@ -227,8 +232,28 @@ def delete_package_by_id_service(id):
             400 # Bad Request
         )
 
-
-
+# Manage users
+def get_all_users_service():
+    try:
+        users = User.query.all()
+        if users:
+            return make_response(
+                users_schema.jsonify(users),
+                200
+            )
+        else:
+            return make_response(
+                {"message": "No users found"},
+                404 # Not Found
+            )
+        
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return make_response(
+            {"message": "Unable to find all users"},
+            400 # Bad Request
+        )
 
     
 
