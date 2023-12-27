@@ -44,10 +44,6 @@ def token_required(f):
 
     return decorated
 
-
-
-
-
 # from functools import wraps
 # import jwt
 # from flask import request, abort, current_app, jsonify

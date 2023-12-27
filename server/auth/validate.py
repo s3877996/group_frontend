@@ -1,6 +1,5 @@
 import re
 
-
 def validate(data, regex):
     """Custom Validator"""
     return bool(re.match(regex, data))

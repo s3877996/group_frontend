@@ -6,7 +6,6 @@
         - password
         - acc plan type (0, 1, 2, 3, etc. - default: 0 for trial)
 """
-import os
 
 """
     Document - User:
@@ -27,6 +26,8 @@ import os
         - period
         - number of available documents (optional)
 """
+
+import os
 from .db import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -108,7 +109,6 @@ class User(db.Model):
         return cls.query.get(user_id)
 
     @classmethod
-
     def get_by_email(cls, user_email):
         return cls.query.filter_by(user_email=user_email).first()
 
@@ -117,14 +117,11 @@ class User(db.Model):
             self.username = username
         db.session.commit()
 
-
     # may need active account
     def disable_account(self):
         # Assuming you have an 'active' column in your table
         self.active = False
         db.session.commit()
-
-
 
     def login(cls, user_email, password):
         user = cls.query.filter_by(user_email=user_email).first()
