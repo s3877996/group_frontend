@@ -1,34 +1,12 @@
-from .admin import AdminApi
-from flask import Blueprint, request, jsonify
-from flask_bcrypt import Bcrypt, generate_password_hash
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
-from server.database.models import User
+from flask import request, jsonify
 from server.database.db import db
-import jwt, os
-from dotenv import load_dotenv
-from flask import Flask, request, jsonify
-from server.resources.validate import validate_email_and_password, validate_user, validate
-from .auth_middleware import token_required
-import logging
 from server.database.models import User
+from .validate import (validate_email_and_password, validate_user, validate)
+import os, jwt
 
-
-load_dotenv()
-
-app = Flask(__name__)
-SECRET_KEY = os.environ.get('SECRET_KEY') or 'this is a secret'
-print(SECRET_KEY)
-app.config['SECRET_KEY'] = SECRET_KEY
-auth_blueprint = Blueprint("auth", __name__)
-
-
-@auth_blueprint.route("/")
-def hello():
-    return "Hello World!"
-
-
-@auth_blueprint.route("/register", methods=["POST"])
-def register_user():
+# Signin - Signup services
+# Signup
+def register_user_service():
     try:
         user_data = request.json
         if not user_data:
@@ -54,10 +32,8 @@ def register_user():
     except Exception as e:
         return jsonify({"message": "Something went wrong", "error": str(e)}), 500
 
-
-
-@auth_blueprint.route("/users/login", methods=["POST"])
-def login():
+# Signin
+def login_service():
     try:
         data = request.json
         if not data:
@@ -76,13 +52,14 @@ def login():
         )
         if user:
             try:
+                secret_key = os.getenv('SECRET_KEY')
                 # Convert the User object to a dictionary
                 user_data = {"user_id": user.user_id, "username": user.username, "user_email": user.user_email,
                              "token": jwt.encode(
-                                 {"user_id": str(user.user_id)},
-                                 app.config["SECRET_KEY"],
-                                 algorithm="HS256"
-                             )}
+                                {"user_id": str(user.user_id)},
+                                secret_key,
+                                algorithm="HS256"
+                            )}
 
                 # Assuming your User object has a 'token' attribute
 
@@ -107,11 +84,8 @@ def login():
                    "data": None
                }, 500
 
-
-
-@auth_blueprint.route("/users", methods=["GET"])
-@token_required
-def get_current_user(current_user):
+# Get current user
+def get_current_user_service(current_user):
     try:
         # Convert the User object to a JSON-serializable dictionary
         user_data_json = {
@@ -126,11 +100,9 @@ def get_current_user(current_user):
         return jsonify({"message": "Successfully retrieved user profile", "data": user_data_json})
     except Exception as e:
         return jsonify({"message": "Something went wrong", "error": str(e)}), 500
-
-
-# @auth_blueprint.route("/users", methods=["PUT"])
-# @token_required
-# def update_user(current_user):
+    
+# Update user
+# def update_user_service(current_user):
 #     try:
 #         user = request.json
 #         if user.get("username"):
@@ -150,10 +122,9 @@ def get_current_user(current_user):
 #             "error": str(e),
 #             "data": None
 #         }), 400
-#
-# @auth_blueprint.route("/users", methods=["DELETE"])
-# @token_required
-# def delete_user(current_user):
+
+# Delete user
+# def delete_user_service(current_user):
 #     try:
 #         if current_user and isinstance(current_user, User):
 #             # Assuming you want to delete the user record
@@ -176,17 +147,10 @@ def get_current_user(current_user):
 #             "error": str(e),
 #             "data": None
 #         }), 500
-
-
-@auth_blueprint.errorhandler(403)
-def forbidden(e):
+    
+# Handle errors
+def forbidden_service(e):
     return jsonify({"message": "Forbidden", "error": str(e)}), 403
 
-
-@auth_blueprint.errorhandler(404)
-def not_found(e):
+def not_found_service(e):
     return jsonify({"message": "Endpoint Not Found", "error": str(e)}), 404
-
-
-def initialize_routes(api):
-    api.add_resource(AdminApi, '/api/auth')
