@@ -6,6 +6,7 @@ from flask import request, make_response
 from server.database.db import db
 from server.database.models import Package
 from server.database.schema import PackageSchema
+from sqlalchemy.sql import func
 
 package_schema = PackageSchema()
 packages_schema = PackageSchema(many=True)
@@ -65,7 +66,6 @@ def add_subscription_service():
 def get_all_packages_service():
     try:
         packages = Package.query.all()
-        print(packages)
         if packages:
             return make_response(
                 packages_schema.jsonify(packages),
@@ -114,10 +114,10 @@ def get_package_by_name_service():
         data = request.args.get('name')
 
         if data:
-            package = Package.query.filter_by(package_name=data).first()
-            if package:
+            packages = Package.query.join(data).filter(func.lower(Package.package_name).like('%' + data.lower() + '%')).all()
+            if packages:
                 return make_response(
-                    package_schema.jsonify(package), 
+                    packages_schema.jsonify(packages),
                     200
                 )
             else:

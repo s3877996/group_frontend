@@ -38,3 +38,4 @@ def update_package_by_id(package_id):
 @admins.route('/admin/delete_package/<int:package_id>', methods=['DELETE'])
 def delete_package_by_id(package_id):
     return delete_package_by_id_service(package_id)
+
