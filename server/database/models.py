@@ -58,6 +58,7 @@ class Package(db.Model):
         db.session.commit()
 
 
+
 # User
 class User(db.Model):
     __tablename__ = 'users'
@@ -65,12 +66,10 @@ class User(db.Model):
     username = db.Column(db.String(255), nullable=False)
     user_password = db.Column(db.String(255), nullable=False)
     user_email = db.Column(db.String(255), unique=True, nullable=False)
-    package_id = db.Column(db.Integer, db.ForeignKey('packages.id'), nullable=False)
+    # package_id = db.Column(db.Integer, db.ForeignKey('packages.id'), nullable=False)
+    package_id = db.Column(db.Integer, db.ForeignKey('packages.id'), nullable=True)
     start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     documents = db.relationship('Document', backref='user', lazy=True)
-
-    # this adding
-    # active = db.Column(db.Boolean, default=True, nullable=False)
 
     def __repr__(self):
         return f'<User {self.username}>'
@@ -85,7 +84,7 @@ class User(db.Model):
         db.session.commit()
 
     @classmethod
-    def create(cls, username, user_email, user_password):
+    def create(cls, username, user_email, user_password, package_id=1):
         user = cls.query.filter_by(user_email=user_email).first()
         if user:
             return False  # Indicate that the user already exists
@@ -94,7 +93,8 @@ class User(db.Model):
         new_user = cls(
             username=username,
             user_email=user_email,
-            user_password=hashed_password
+            user_password=hashed_password,
+            package_id=package_id  # Set package_id explicitly
         )
         db.session.add(new_user)
         db.session.commit()

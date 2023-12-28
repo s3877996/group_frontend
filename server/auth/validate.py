@@ -18,27 +18,28 @@ def validate_user(**args):
     """User Validator"""
     errors = {}
 
-    if not args.get('email') or not args.get('password') or not args.get('name'):
-        errors['email'] = 'Email is required'
-        errors['password'] = 'Password is required'
-        errors['name'] = 'Name is required'
+    if not args.get('user_email') or not args.get('user_password') or not args.get('username'):
+        errors['user_email'] = 'Email is required'
+        errors['user_password'] = 'Password is required'
+        errors['username'] = 'Name is required'
 
-    if not all(isinstance(args[key], str) for key in ['name', 'email', 'password']):
-        errors['email'] = 'Email must be a string'
-        errors['password'] = 'Password must be a string'
-        errors['name'] = 'Name must be a string'
+    if not all(isinstance(args[key], str) for key in ['username', 'user_email', 'user_password']):
+        errors['user_email'] = 'Email must be a string'
+        errors['user_password'] = 'Password must be a string'
+        errors['username'] = 'Name must be a string'
 
-    if not validate_email(args.get('email')):
-        errors['email'] = 'Email is invalid'
+    if not validate_email(args.get('user_email')):
+        errors['user_email'] = 'Email is invalid'
 
-    if not validate_password(args.get('password')):
-        errors['password'] = 'Password is invalid. It should be at least 8 characters with upper and lower case letters, numbers, and special characters'
+    if not validate_password(args.get('user_password')):
+        errors['user_password'] = 'Password is invalid. It should be at least 8 characters with upper and lower case letters, numbers, and special characters'
 
-    name_word_count = len(args['name'].split())
+    name_word_count = len(args['username'].split())
     if not 2 <= name_word_count <= 30:
-        errors['name'] = 'Name must be between 2 and 30 words'
+        errors['username'] = 'Name must be between 2 and 30 words'
 
     return errors if errors else True
+
 
 def validate_email_and_password(email, password):
     """Email and Password Validator"""

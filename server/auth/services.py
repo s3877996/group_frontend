@@ -12,7 +12,14 @@ def register_user_service():
         if not user_data:
             return jsonify({"message": "Please provide user details", "error": "Bad request"}), 400
 
-        new_user = User.create(**user_data)
+        # Call User.create with the appropriate arguments, including package_id=1
+        new_user = User.create(
+            username=user_data['username'],
+            user_email=user_data['user_email'],
+            user_password=user_data['user_password'],
+            package_id=1  # Set package_id to 1
+        )
+
         if new_user is False:
             return jsonify({"message": "User already exists", "error": "Conflict"}), 409
 
@@ -21,7 +28,7 @@ def register_user_service():
             "user_id": new_user.user_id,
             "username": new_user.username,
             "user_email": new_user.user_email,
-            "package_id": new_user.package_id,
+            "package_id": 1,  # Use the actual value of package_id here
             "start_time": new_user.start_time.isoformat(),
             # "active": new_user.active,
             # Include other fields as needed
@@ -31,6 +38,9 @@ def register_user_service():
 
     except Exception as e:
         return jsonify({"message": "Something went wrong", "error": str(e)}), 500
+
+
+
 
 # Signin
 def login_service():
@@ -56,10 +66,10 @@ def login_service():
                 # Convert the User object to a dictionary
                 user_data = {"user_id": user.user_id, "username": user.username, "user_email": user.user_email,
                              "token": jwt.encode(
-                                {"user_id": str(user.user_id)},
-                                secret_key,
-                                algorithm="HS256"
-                            )}
+                                 {"user_id": str(user.user_id)},
+                                 secret_key,
+                                 algorithm="HS256"
+                             )}
 
                 # Assuming your User object has a 'token' attribute
 
@@ -69,9 +79,9 @@ def login_service():
                 }
             except Exception as e:
                 return {
-                    "error": "Something went wrong",
-                    "message": str(e)
-                }, 500
+                           "error": "Something went wrong",
+                           "message": str(e)
+                       }, 500
         return {
                    "message": "Error fetching auth token!, invalid email or password",
                    "data": None,
@@ -83,6 +93,7 @@ def login_service():
                    "error": str(e),
                    "data": None
                }, 500
+
 
 # Get current user
 def get_current_user_service(current_user):
@@ -100,7 +111,8 @@ def get_current_user_service(current_user):
         return jsonify({"message": "Successfully retrieved user profile", "data": user_data_json})
     except Exception as e:
         return jsonify({"message": "Something went wrong", "error": str(e)}), 500
-    
+
+
 # Update user
 # def update_user_service(current_user):
 #     try:
@@ -147,10 +159,11 @@ def get_current_user_service(current_user):
 #             "error": str(e),
 #             "data": None
 #         }), 500
-    
+
 # Handle errors
 def forbidden_service(e):
     return jsonify({"message": "Forbidden", "error": str(e)}), 403
+
 
 def not_found_service(e):
     return jsonify({"message": "Endpoint Not Found", "error": str(e)}), 404
