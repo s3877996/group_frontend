@@ -1,6 +1,6 @@
 import os 
 from dotenv import load_dotenv
-
+print("FLASK_DEBUG:", os.environ.get("FLASK_DEBUG"))
 load_dotenv()
 SECRET_KEY =os.environ.get('SECRET_KEY') or 'this is a secret'
 JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'this is a JWT secret'

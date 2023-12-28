@@ -141,7 +141,7 @@ const LoginPage = () => {
 
                     <div className="mt-5 text-xs flex justify-between items-center">
                         <p className="text-decoration-line: underline">Don't have an account?</p>
-                        <button className="py-2 px-5 text-white bg-green-600 font-bold border rounded-xl hover:scale-105 duration-300">Register</button>
+                        <button className="py-2 px-5 text-white bg-green-600 font-bold border rounded-xl hover:scale-105 duration-300" onClick={() => navigate('/register')}>Register</button>
                     </div>
 
                     <br />
@@ -149,7 +149,7 @@ const LoginPage = () => {
 
                 </div>
             </div>
-            {/*Right hand side Container*/}
+            {/*Right-hand side Container*/}
 
         </div>
     )
