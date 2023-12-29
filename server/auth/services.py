@@ -134,6 +134,41 @@ def get_current_user_service(current_user):
 #             "error": str(e),
 #             "data": None
 #         }), 400
+def update_user_service(current_user):
+    try:
+        user_data = request.json
+        if user_data.get("username") or user_data.get("user_password"):
+            user = User.query.get(current_user["_id"])
+            if not user:
+                return jsonify({"message": "User not found", "error": "Not Found"}), 404
+
+            # Update user data
+            user_data = user.update(
+                username=user_data.get("username"),
+                user_password=user_data.get("user_password"),
+            )
+
+            # Commit the changes to the database
+            db.session.commit()
+
+            return jsonify({
+                "message": "Successfully updated account",
+                "data": user_data
+            }), 200
+
+        return jsonify({
+            "message": "Invalid data, you can only update your account name or password",
+            "data": None,
+            "error": "Bad Request"
+        }), 400
+
+    except Exception as e:
+        return jsonify({
+            "message": "Failed to update account",
+            "error": str(e),
+            "data": None
+        }), 500
+
 
 # Delete user
 # def delete_user_service(current_user):

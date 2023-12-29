@@ -5,9 +5,27 @@ from .auth.routes import auth
 from flask_cors import CORS
 import os, jwt
 
+from .database.models import Package
+
+
 def create_db(app):
     if not os.path.exists('server/database.db'): 
         with app.app_context():
+            # Check if the default package exists
+            default_package = Package.query.get(1)
+
+            if not default_package:
+                # If not, create and add the default package
+                default_package = Package(
+                    id=1,
+                    package_name='Trial Package',
+                    package_period='1 month',
+                    limited_docs='2',
+                    package_price=0.0,
+                    package_description='Free plan subcription for user',
+                )
+                db.session.add(default_package)
+                db.session.commit()
             db.create_all()
         print('Database created')
 

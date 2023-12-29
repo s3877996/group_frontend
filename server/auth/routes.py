@@ -1,6 +1,6 @@
 from flask import Blueprint
 from .services import (register_user_service, login_service, get_current_user_service, forbidden_service,
-                       not_found_service)
+                       not_found_service, update_user_service)
 from .auth_middleware import token_required
 
 auth = Blueprint('auth', __name__)
@@ -25,7 +25,7 @@ def get_current_user(current_user):
 @auth.route("/users", methods=["PUT"])
 @token_required
 def update_user(current_user):
-    return "Update user"
+    return update_user_service(current_user)
 
 
 @auth.route("/users", methods=["DELETE"])
