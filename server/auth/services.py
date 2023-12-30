@@ -137,13 +137,9 @@ def get_current_user_service(current_user):
 def update_user_service(current_user):
     try:
         user_data = request.json
-        if user_data.get("username") or user_data.get("user_password"):
-            user = User.query.get(current_user["_id"])
-            if not user:
-                return jsonify({"message": "User not found", "error": "Not Found"}), 404
-
-            # Update user data
-            user_data = user.update(
+        if user_data.get("username") is not None or user_data.get("user_password") is not None:
+            # Use the current_user object directly
+            user_data = current_user.update(
                 username=user_data.get("username"),
                 user_password=user_data.get("user_password"),
             )
@@ -168,32 +164,6 @@ def update_user_service(current_user):
             "error": str(e),
             "data": None
         }), 500
-
-
-# Delete user
-# def delete_user_service(current_user):
-#     try:
-#         if current_user and isinstance(current_user, User):
-#             # Assuming you want to delete the user record
-#             current_user.delete_account()
-#
-#             return jsonify({
-#                 "message": "Successfully deleted the user account",
-#                 "data": None
-#             }), 200
-#         else:
-#             return jsonify({
-#                 "message": "User not found",
-#                 "data": None,
-#                 "error": "Not Found"
-#             }), 404
-#
-#     except Exception as e:
-#         return jsonify({
-#             "message": "Failed to delete user account",
-#             "error": str(e),
-#             "data": None
-#         }), 500
 
 # Handle errors
 def forbidden_service(e):
