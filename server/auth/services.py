@@ -134,31 +134,36 @@ def get_current_user_service(current_user):
 #             "error": str(e),
 #             "data": None
 #         }), 400
+def update_user_service(current_user):
+    try:
+        user_data = request.json
+        if user_data.get("username") is not None or user_data.get("user_password") is not None:
+            # Use the current_user object directly
+            user_data = current_user.update(
+                username=user_data.get("username"),
+                user_password=user_data.get("user_password"),
+            )
 
-# Delete user
-# def delete_user_service(current_user):
-#     try:
-#         if current_user and isinstance(current_user, User):
-#             # Assuming you want to delete the user record
-#             current_user.delete_account()
-#
-#             return jsonify({
-#                 "message": "Successfully deleted the user account",
-#                 "data": None
-#             }), 200
-#         else:
-#             return jsonify({
-#                 "message": "User not found",
-#                 "data": None,
-#                 "error": "Not Found"
-#             }), 404
-#
-#     except Exception as e:
-#         return jsonify({
-#             "message": "Failed to delete user account",
-#             "error": str(e),
-#             "data": None
-#         }), 500
+            # Commit the changes to the database
+            db.session.commit()
+
+            return jsonify({
+                "message": "Successfully updated account",
+                "data": user_data
+            }), 200
+
+        return jsonify({
+            "message": "Invalid data, you can only update your account name or password",
+            "data": None,
+            "error": "Bad Request"
+        }), 400
+
+    except Exception as e:
+        return jsonify({
+            "message": "Failed to update account",
+            "error": str(e),
+            "data": None
+        }), 500
 
 # Handle errors
 def forbidden_service(e):

@@ -67,7 +67,7 @@ class User(db.Model):
     user_password = db.Column(db.String(255), nullable=False)
     user_email = db.Column(db.String(255), unique=True, nullable=False)
     # package_id = db.Column(db.Integer, db.ForeignKey('packages.id'), nullable=False)
-    package_id = db.Column(db.Integer, db.ForeignKey('packages.id'), nullable=True)
+    package_id = db.Column(db.Integer, db.ForeignKey('packages.id'), nullable=True, default=1)
     start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     documents = db.relationship('Document', backref='user', lazy=True)
 
@@ -112,10 +112,27 @@ class User(db.Model):
     def get_by_email(cls, user_email):
         return cls.query.filter_by(user_email=user_email).first()
 
-    def update(self, username=None):
+    def update(self, username=None, user_password=None):
         if username:
             self.username = username
+        if user_password:
+            print(f"Before Update - Hashed Password: {self.user_password}")
+            self.set_password(user_password)
+            print(f"After Update - Hashed Password: {self.user_password}")
         db.session.commit()
+        return {
+            "user_id": self.user_id,
+            "username": self.username,
+            "user_email": self.user_email,
+            "package_id": self.package_id,
+            "start_time": self.start_time.isoformat(),
+        }
+
+    def set_password(self, password):
+        self.user_password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.user_password, password)
 
     # may need active account
     def disable_account(self):
