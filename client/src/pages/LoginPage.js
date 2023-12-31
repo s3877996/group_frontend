@@ -2,13 +2,14 @@ import React, {useState , useCallback} from "react";
 import { useNavigate } from "react-router-dom";
 import {FcGoogle} from 'react-icons/fc';
 import axios from 'axios';
-// https://localhost:8080/api/auth/authenticate
 
 const LoginPage = () => {
     // const API_URL = "http://localhost:5000/api/users/login"
+    // const signIn = useSignIn();
+
+
     const [error, setError] = useState(""); // State to store the error message
     const navigate = useNavigate();
-    // const signIn = useSignIn();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [token, setToken] = useState('');
@@ -30,8 +31,14 @@ const LoginPage = () => {
 
           if (data && data.data && data.data.token) {
             // Save the token to state or local storage for future use
-            setToken(data.token);
+            setToken(data.data.token);
+            const token = data.data.token;
 
+            // Save the token to state
+              setToken(token);
+
+              // Save the token to localStorage
+              localStorage.setItem('token', token);
             // Check if the user information is directly available in the response
             const userData = data.data ? data.data : data;
 
@@ -71,15 +78,15 @@ const LoginPage = () => {
 
     return (
         <div className="flex flex-row min-h-screen justify-center">
-            {/*Slogan left hand side container*/}
+            {/*Slogan left-hand side container*/}
             <div className="sm:w-1/2 bg-green-500 text-white flex items-center justify-center ">
                 <div className="hidden sm:block ">
                     <div className="text:1xl 2xl:text-4xl xl:text-3xl lg:text:2xl md:text:2xl mb-2">The perfect mate for your next adventure.</div>
                 </div>
             </div>
-            {/*Slogan left hand side container*/}
+            {/*Slogan left-hand side container*/}
 
-            {/*Right hand side Container  Container*/}
+            {/*Right-hand side Container*/}
             <div className="sm:w-1/2 bg-white flex items-center justify-center">
                 <div className="w-full max-w-xl px-8 py-6 lg:mx-8 rounded-md ">
                     <h1 className="text-4xl md:text-4xl lg:text-5xl mb-6 text-center">Welcome Back</h1>

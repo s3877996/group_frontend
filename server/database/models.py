@@ -58,7 +58,6 @@ class Package(db.Model):
         db.session.commit()
 
 
-
 # User
 class User(db.Model):
     __tablename__ = 'users'
@@ -116,9 +115,9 @@ class User(db.Model):
         if username:
             self.username = username
         if user_password:
-            print(f"Before Update - Hashed Password: {self.user_password}")
+            print(f"Before Update - Hashed Password: {self.user_password}")  # for debugging only
             self.set_password(user_password)
-            print(f"After Update - Hashed Password: {self.user_password}")
+            print(f"After Update - Hashed Password: {self.user_password}")   # for debugging only
         db.session.commit()
         return {
             "user_id": self.user_id,

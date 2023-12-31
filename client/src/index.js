@@ -11,6 +11,7 @@ import HomePage from "./pages/HomePage";
 import AdminPage from "./pages/AdminPage";
 import LandingPage from "./pages/LandingPage";
 import RegisterPage from "./pages/RegisterPage";
+import UserProfilePage from "./pages/UserProfilePage";
 
 const router = createBrowserRouter([
     {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
     {
         path: "/register",
         element: <RegisterPage/>,
+    },
+        {
+        path: "/userprofile",
+        element: <UserProfilePage/>,
     },
 ]);
 
