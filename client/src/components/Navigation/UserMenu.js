@@ -34,6 +34,9 @@ const UserMenu = () =>{
         navigate('/');
     }
 
+        const handleUserProfile = () => {
+        navigate('/userprofile');
+    }
     return(
         <div className="relative">
             <div className="flex flex-row items-center gap-3">
@@ -53,7 +56,7 @@ const UserMenu = () =>{
                     <div className="flex flex-col cursor-pointer">
                     <>
                         <MenuItem onClick={toggleOpen} label="Home" Icon={HomeIcon} />
-                        <MenuItem onClick={toggleOpen} label="My profile" Icon={UserCircleIcon}/>
+                        <MenuItem onClick={handleUserProfile} label="My profile" Icon={UserCircleIcon}/>
                         <MenuItem onClick={toggleOpen} label="My subcription" Icon={CreditCardIcon}/>
                         <hr/>
                         <MenuItem onClick={handleSignOut} label="Sign Out" Icon={() => <PowerIcon className="text-red-500 mr-2 h-5 w-5"/>} />

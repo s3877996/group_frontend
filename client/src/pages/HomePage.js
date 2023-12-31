@@ -11,17 +11,17 @@ const HomePage = ()  =>{
               <Navbar/>
 
               <div className="flex min-h-screen justify-center">
-                {/*Insert file in the left hand side container*/}
+                {/*Insert file in the left-hand side container*/}
                 <div className="sm:w-1/2 bg-white-500 text-white flex items-center justify-center">
                   <FileRender/>
                 </div>
-                {/*Insert file in the left hand side container*/}
+                {/*Insert file in the left-hand side container*/}
 
                 {/*Right hand side Container*/}
                 <div className="sm:w-1/2 bg-white flex items-center justify-center">
                   <h1>File after adjust</h1>
                 </div>
-                {/*Right hand side Container*/}
+                {/*Right-hand side Container*/}
 
                </div>
             </div>

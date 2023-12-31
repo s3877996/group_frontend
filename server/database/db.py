@@ -10,3 +10,7 @@ ma = Marshmallow()
 # host = "eeet2582-group-project-db.ch84muicwcq6.us-east-1.rds.amazonaws.com",
 # port = "5432",
 # dbname = "postgres"
+
+
+
+# DATABASE_URL=postgresql://postgres:postgres@eeet2582-group-project-db.ch84muicwcq6.us-east-1.rds.amazonaws.com:5432/postgres
