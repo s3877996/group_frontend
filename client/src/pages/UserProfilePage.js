@@ -1,57 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
+import api from '../api'
+import { useNavigate } from 'react-router-dom';
 const UserProfilePage = ({ token }) =>{
 
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-
+    const storedToken = localStorage.getItem('token');
+    const [fullname, setFullname] = useState('');
+    const [phone, setPhone] = useState('');
+    const navigate = useNavigate();
 
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+        // if (storedToken){
+        // setAuthToken(storedToken);
+        api.get('/api/users/me') // Assuming this is backend endpoint
+            .then(response => {
+                console.log(response.data)
+                setUserData(response.data.data);
+                setFullname(response.data.data.fullname)
+                setPhone(response.data.data.phone)
+                /*document.getElementById("username").innerHTML = `${userData.username}`;
+                document.getElementById("email").innerHTML = `${userData.user_email}`;
+                document.getElementById("packageId").innerHTML = `${userData.package_id}`;*/
+            })
+            .catch(error => {
+                console.error('Error fetching user data:', error);
+            });
 
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/users', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        // else{
+        //     navigate('/login');
+        // }
+        // Fetch user data from the backend when the component mounts
+        // Replace the URL with  actual backend endpoint
+
+    }, [navigate]);
 
 
-        // Check if the response has the expected structure
-        if (response.data && response.data.data) {
-          // Format start_time to mm/dd/yyyy format
-          const formattedData = {
-            ...response.data.data,
-            start_time: new Date(response.data.data.start_time).toLocaleDateString('en-US', {
-              month: '2-digit',
-              day: '2-digit',
-              year: 'numeric',
-            }),
-          };
 
-          setUserData(formattedData);
-        } else {
-          console.error('Unexpected response format:', response);
-        }
 
-        //setUserData(response.data.data);
-        setLoading(false);
-        console.log('User data:', response.data); // Add this line to log the user data
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        setLoading(false);
-      }
-    };
-
-    if (token) {
-      fetchUserData();
-    } else {
-      setLoading(false);
-    }
-  }, [token]);
 
     return (
     <div className="bg-gray-100 h-screen flex items-center justify-center">
@@ -73,7 +61,7 @@ const UserProfilePage = ({ token }) =>{
                   </div>
                   <div className="flex-1">
                     <span className="text-gray-500">Phone</span>
-                    <p className="text-black font-semibold">(123) 456-7890</p>
+                    <p className="text-black font-semibold">{userData?.phone}</p>
                   </div>
                 </div>
                 <div className="flex flex-row mt-4">
@@ -89,7 +77,7 @@ const UserProfilePage = ({ token }) =>{
                 <div className="flex flex-row mt-4">
                   <div className="flex-1">
                     <span className="text-gray-500">Subscription Package</span>
-                    <p className="text-black font-semibold">Premium</p>
+                    <p className="text-black font-semibold">{userData?.package_name}</p>
                   </div>
                   <div className="flex-1">
                     <span className="text-gray-500">Join Day</span>
