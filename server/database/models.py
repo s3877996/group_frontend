@@ -1,32 +1,3 @@
-"""
-    User:
-        - id
-        - name
-        - email
-        - password
-        - acc plan type (0, 1, 2, 3, etc. - default: 0 for trial)
-"""
-
-"""
-    Document - User:
-        - id
-        - user_id
-        - title
-        - content of original document
-        - content of processed document
-        - created_at
-        - updated_at (after modified timestamp)
-"""
-
-"""
-    Subscription packages:
-        - id
-        - name
-        - price
-        - period
-        - number of available documents (optional)
-"""
-
 import os
 
 from flask import jsonify
@@ -34,8 +5,7 @@ from .db import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
-
+# User when does not subsribe new package will be deactivated
 
 # Subcription package
 class Package(db.Model):
@@ -73,17 +43,17 @@ class User(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), nullable=False)
-    fullname = db.Column(db.String(255), nullable=False)
-    phone = db.Column(db.String(255), nullable=False)
-
+    user_fullname = db.Column(db.String(255), nullable=False)
+    user_birth = db.Column(db.DateTime, nullable=False)
+    user_joined_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_password = db.Column(db.String(255), nullable=False)
     user_email = db.Column(db.String(255), unique=True, nullable=False)
+    phone = db.Column(db.String(255), nullable=False)
     stripe_id = db.Column(db.String(255), nullable=True)
-    # package_id = db.Column(db.Integer, db.ForeignKey('packages.id'), nullable=False)
-    package_id = db.Column(db.Integer, db.ForeignKey('packages.id'), nullable=True, default=1)
-    start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    active = db.Column(db.Boolean, default=True, nullable=False)
     documents = db.relationship('Document', backref='user', lazy=True)
     subscriptions = db.relationship('Subscription', back_populates='user', lazy=True)
+
 
     def __repr__(self):
         return f'<User {self.username}>'
@@ -147,7 +117,6 @@ class User(db.Model):
         db.session.merge(user)
         db.session.flush()
         db.session.commit()
-
         return {"id":user.user_id}
 
     def set_password(self, password):
@@ -168,6 +137,37 @@ class User(db.Model):
             return None  # Invalid credentials
 
         return user
+
+class UserPackage(db.Model):
+    __tablename__ = 'user_packages'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    package_id = db.Column(db.Integer, db.ForeignKey('packages.id'), nullable=False)
+    start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    available_docs = db.Column(db.Integer)
+
+    def __repr__(self):
+        return "<UserPaxkage (user_id='{}', package_id='{}')>"\
+                .format(self.user_id, self.package_id)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self, package_id=None):
+        if package_id:
+            self.package_id = package_id
+
+        db.session.commit()
+        return {
+            "user_id": self.user_id, 
+            "package_id": self.package_id
+        }
+
+    # delete the user_package
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
 
 # Uploaded Document

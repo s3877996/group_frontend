@@ -140,7 +140,7 @@ def get_package_by_name_service():
         print(e)
         db.session.rollback()
         return make_response(
-            {"message": "Unable to find package by id: " + id},
+            {"message": "Unable to find package by name: " + name},
             400 # Bad Request
         )
 
@@ -208,6 +208,7 @@ def update_package_by_id_service(id):
 
 # Delete package
 def delete_package_by_id_service(id):
+    # Need to check whether package is used
     try:
         package = Package.query.get(id)
 
@@ -232,7 +233,9 @@ def delete_package_by_id_service(id):
             400 # Bad Request
         )
 
+################################
 # Manage users
+# Get all users
 def get_all_users_service():
     try:
         users = User.query.all()
@@ -255,5 +258,57 @@ def get_all_users_service():
             400 # Bad Request
         )
 
-    
+# Get user by id
+def get_user_by_id_service(id):
+    try:
+        user = User.query.get(user_id=id)
 
+        if user:
+            return make_response(
+                user_schema.jsonify(user), 
+                200
+            )
+        else:
+            return make_response(
+                {"message": "User not found"},
+                404 # Not Found
+            )
+
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return make_response(
+            {"message": "Unable to find user by id"},
+            400
+        )
+    
+# Get user by name
+def get_user_by_name_service(name):
+    try:
+        data = request.args.get('name')
+
+        if data:
+            users = User.query.join(data).filter(func.lower(User.username).like('%' + data.lower() + '%')).all()
+            if users:
+                return make_response(
+                    users_schema.jsonify(users),
+                    200
+                )
+            else:
+                return make_response(
+                    {"message": "Username not found"},
+                    404 # Not Found
+                )
+        else:
+            return make_response(
+                {"message": "Invalid request"},
+                400 # Bad Request
+            )
+        
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return make_response(
+            {"message": "Unable to find user by name: " + name},
+            400 # Bad Request
+        )
