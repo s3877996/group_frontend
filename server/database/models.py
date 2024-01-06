@@ -18,7 +18,7 @@ class Package(db.Model):
     package_price = db.Column(db.Numeric(10, 2), nullable=False)
     stripe_price = db.Column(db.String(255))
     package_description = db.Column(db.Text)
-    users = db.relationship('User', backref='package', lazy=True)
+    users = db.relationship('UserPackage', backref='packages', lazy=True)
     subscriptions = db.relationship('Subscription', back_populates='package', lazy=True)
 
     def __repr__(self):
@@ -43,17 +43,15 @@ class User(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), nullable=False)
-    user_fullname = db.Column(db.String(255), nullable=False)
-    user_birth = db.Column(db.DateTime, nullable=False)
+    user_fullname = db.Column(db.String(255), nullable=True)
+    user_birth_date = db.Column(db.DateTime, nullable=False)
     user_joined_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_password = db.Column(db.String(255), nullable=False)
     user_email = db.Column(db.String(255), unique=True, nullable=False)
-    phone = db.Column(db.String(255), nullable=False)
+    phone = db.Column(db.String(255), nullable=True)
     stripe_id = db.Column(db.String(255), nullable=True)
     active = db.Column(db.Boolean, default=True, nullable=False)
-    documents = db.relationship('Document', backref='user', lazy=True)
-    subscriptions = db.relationship('Subscription', back_populates='user', lazy=True)
-
+    documents = db.relationship('UserPackage', backref='users', lazy=True)
 
     def __repr__(self):
         return f'<User {self.username}>'
@@ -169,6 +167,18 @@ class UserPackage(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+# Record list of users that have use the trial package
+class History(db.Model):
+    __tablename__ = 'histories'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+
+    def __repr__(self):
+        return f'<History {self.user_id}>'
+    
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
 # Uploaded Document
 class Document(db.Model):
