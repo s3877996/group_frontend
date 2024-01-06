@@ -334,10 +334,10 @@ def get_users_by_package_id_service(package_id):
                 user_dict = {
                     "username": user.username,
                     "user_email": user.user_email,
-                    "user_joined_date": user.user_joined_date,
-                    "active": user.active, 
+                    # "user_joined_date": user.user_joined_date,
+                    # "active": user.active, 
                     "package_name": user.package.package_name,
-                    "package_start_time": user.user_package.start_time
+                    # "package_start_time": user.user_package.start_time
                 }
                 users_data.append(user_dict)
 
@@ -382,10 +382,10 @@ def get_users_by_package_name_service():
                 user_dict = {
                     "username": user.username,
                     "user_email": user.user_email,
-                    "user_joined_date": user.user_joined_date,
-                    "active": user.active, 
+                    # "user_joined_date": user.user_joined_date,
+                    # "active": user.active, 
                     "package_name": user.package.package_name,
-                    "package_start_time": user.user_package.start_time
+                    # "package_start_time": user.user_package.start_time
                 }
                 users_data.append(user_dict)
 
