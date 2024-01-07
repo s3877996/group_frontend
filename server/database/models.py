@@ -18,7 +18,7 @@ class Package(db.Model):
     package_price = db.Column(db.Numeric(10, 2), nullable=False)
     stripe_price = db.Column(db.String(255))
     package_description = db.Column(db.Text)
-    users = db.relationship('UserPackage', backref='packages', lazy=True)
+    user_package = db.relationship('UserPackage', back_populates='package', lazy=True)
     subscriptions = db.relationship('Subscription', back_populates='package', lazy=True)
 
     def __repr__(self):
@@ -51,7 +51,10 @@ class User(db.Model):
     phone = db.Column(db.String(255), nullable=True)
     stripe_id = db.Column(db.String(255), nullable=True)
     active = db.Column(db.Boolean, default=True, nullable=False)
-    documents = db.relationship('UserPackage', backref='users', lazy=True)
+    documents = db.relationship('Document', backref='user', lazy=True)
+    histories = db.relationship('History', backref='user', lazy=True)
+    user_package = db.relationship('UserPackage', back_populates='user', lazy=True)
+    subscriptions = db.relationship('Subscription', back_populates='user', lazy=True)
 
     def __repr__(self):
         return f'<User {self.username}>'
@@ -143,6 +146,8 @@ class UserPackage(db.Model):
     package_id = db.Column(db.Integer, db.ForeignKey('packages.id'), nullable=False)
     start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     available_docs = db.Column(db.Integer)
+    user = db.relationship('User', back_populates='user_package')
+    package = db.relationship('Package', back_populates='user_package')
 
     def __repr__(self):
         return "<UserPaxkage (user_id='{}', package_id='{}')>"\
