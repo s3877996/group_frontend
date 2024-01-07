@@ -110,7 +110,7 @@ def get_package_by_id_service(id):
         print(e)
         db.session.rollback()
         return make_response(
-            {"message": "Unable to find package by id: " + id},
+            {"message": "Unable to find package by id: " + str(id)},
             400 # Bad Request
         )
     
@@ -322,7 +322,7 @@ def get_users_by_name_service(name):
 def get_users_by_package_id_service(package_id):
     try:
         users = User.query \
-            .join(UserPackage, User.id == UserPackage.user_id) \
+            .join(UserPackage, User.user_id == UserPackage.user_id) \
             .join(Package, Package.id == UserPackage.package_id) \
             .filter(UserPackage.package_id == package_id) \
             .all()
@@ -343,7 +343,7 @@ def get_users_by_package_id_service(package_id):
 
             return jsonify(
                     {
-                        "message": "Successfully find users by package id: " + package_id,
+                        "message": "Successfully find users by package id: " + str(package_id),
                         "data": users_data
                     },
                     200
@@ -359,7 +359,7 @@ def get_users_by_package_id_service(package_id):
         print(e)
         db.session.rollback()
         return make_response(
-            {"message": "Unable to find users by package id: " + package_id},
+            {"message": "Unable to find users by package id: " + str(package_id)},
             400
             
         )
@@ -367,10 +367,10 @@ def get_users_by_package_id_service(package_id):
 # Get users by package name
 def get_users_by_package_name_service():
     try:
-        package_name = request.args.get('name')
+        package_name = request.args.get('package_name')
 
         users = User.query \
-            .join(UserPackage, User.id == UserPackage.user_id) \
+            .join(UserPackage, User.user_id == UserPackage.user_id) \
             .join(Package, Package.id == UserPackage.package_id) \
             .filter(Package.package_name.like(f'%{package_name}%')) \
             .all()
@@ -407,7 +407,7 @@ def get_users_by_package_name_service():
         print(e)
         db.session.rollback()
         return make_response(
-            {"message": "Unable to find users by package id: " + package_id},
+            {"message": "Unable to find users by package name: " + package_name},
             400
             
         )
