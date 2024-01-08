@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 import logging
 from flask import request, jsonify
 from server.database.db import db
-from server.database.models import Package, Subscription, User
+from server.database.models import Package, Subscription, User, UserPackage
 from .validate import (validate_email_and_password, validate_user, validate)
 import os, jwt
 
@@ -22,8 +22,11 @@ def register_user_service():
             username=user_data['username'],
             user_email=user_data['user_email'],
             user_password=user_data['user_password'],
-            package_id=1  # Set package_id to 1
+            # package_id=1  # Set package_id to 1
         )
+
+        ################################################################
+        # Set package id in user package class
 
         if new_user is False:
             return jsonify({"message": "User already exists", "error": "Conflict"}), 409
@@ -34,7 +37,7 @@ def register_user_service():
             "username": new_user.username,
             "user_email": new_user.user_email,
             "package_id": 1,  # Use the actual value of package_id here
-            "start_time": new_user.start_time.isoformat(),
+            # "start_time": new_user.start_time.isoformat(),
             # "active": new_user.active,
             # Include other fields as needed
         }
@@ -111,6 +114,9 @@ def get_current_user_service(current_user):
     try:
         # Convert the User object to a JSON-serializable dictionary
         sub_current = Subscription.get_by_user_id(current_user.user_id)
+        ################################
+        # Add value to user package and call user package of current user here
+
         package = Package.get_by_id(sub_current.package_id)
         user_data_json = {
             "limited_docs":package.limited_docs,
@@ -119,7 +125,7 @@ def get_current_user_service(current_user):
             "user_id": current_user.user_id,
             "username": current_user.username,
             "user_email": current_user.user_email,
-            "package_id": sub_current.package_id,
+            # "package_id": sub_current.package_id,
             "package_name": sub_current.package.package_name,
             "next_payment": sub_current.next_time.isoformat(),
             "start_time": current_user.start_time.isoformat(),  # Include other fields as needed

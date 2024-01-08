@@ -44,13 +44,13 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), nullable=False)
     user_fullname = db.Column(db.String(255), nullable=True)
-    user_birth_date = db.Column(db.DateTime, nullable=False)
+    user_birth_date = db.Column(db.DateTime, nullable=True)
     user_joined_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_password = db.Column(db.String(255), nullable=False)
     user_email = db.Column(db.String(255), unique=True, nullable=False)
     phone = db.Column(db.String(255), nullable=True)
     stripe_id = db.Column(db.String(255), nullable=True)
-    active = db.Column(db.Boolean, default=True, nullable=False)
+    active = db.Column(db.Boolean, default=True, nullable=True)
     documents = db.relationship('Document', backref='user', lazy=True)
     histories = db.relationship('History', backref='user', lazy=True)
     user_package = db.relationship('UserPackage', back_populates='user', lazy=True)
@@ -79,7 +79,7 @@ class User(db.Model):
             username=username,
             user_email=user_email,
             user_password=hashed_password,
-            package_id=package_id  # Set package_id explicitly
+            # package_id=package_id  # Set package_id explicitly
         )
         db.session.add(new_user)
         db.session.commit()
