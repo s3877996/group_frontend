@@ -21,26 +21,34 @@ def register_user_service():
         new_user = User.create(
             username=user_data['username'],
             user_email=user_data['user_email'],
-            user_password=user_data['user_password'],
-            # package_id=1  # Set package_id to 1
+            user_password=user_data['user_password']
         )
-
-        ################################################################
-        # Set package id in user package class
 
         if new_user is False:
             return jsonify({"message": "User already exists", "error": "Conflict"}), 409
 
+        ################################################################
+        # Set package id in user package class
+        new_user_package = UserPackage.create(
+            user_id=new_user.user_id,
+            package_id=1,
+            available_docs=10
+        )
+
+        if new_user_package is False:
+            return jsonify({"message": "User package is unable to create", "error": "Bad request"}), 400
+    
         # Convert the User object to a JSON-serializable dictionary
         user_data_json = {
             "user_id": new_user.user_id,
             "username": new_user.username,
             "user_email": new_user.user_email,
             "package_id": 1,  # Use the actual value of package_id here
-            # "start_time": new_user.start_time.isoformat(),
+            "start_time": new_user_package.start_time.isoformat(),
             # "active": new_user.active,
             # Include other fields as needed
         }
+
         Subscription.create(
             package_id=1,
             user_id=new_user.user_id,
@@ -116,21 +124,21 @@ def get_current_user_service(current_user):
         sub_current = Subscription.get_by_user_id(current_user.user_id)
         ################################
         # Add value to user package and call user package of current user here
-
-        package = Package.get_by_id(sub_current.package_id)
-        user_data_json = {
-            "limited_docs":package.limited_docs,
-            "fullname": current_user.fullname,
-            "phone": current_user.phone,
-            "user_id": current_user.user_id,
-            "username": current_user.username,
-            "user_email": current_user.user_email,
-            # "package_id": sub_current.package_id,
-            "package_name": sub_current.package.package_name,
-            "next_payment": sub_current.next_time.isoformat(),
-            "start_time": current_user.start_time.isoformat(),  # Include other fields as needed
-            "available_doc": sub_current.available_doc,  # Include other fields as needed
-        }
+        # current_user_package = UserPackage.query.filter(UserPackage.user_id == current_user.user_id).first()
+        # package = Package.get_by_id(current_user_package.package_id)
+        # user_data_json = {
+        #     "limited_docs":package.limited_docs,
+        #     "fullname": current_user.user_fullname,
+        #     "phone": current_user.phone,
+        #     "user_id": current_user.user_id,
+        #     "username": current_user.username,
+        #     "user_email": current_user.user_email,
+        #     "package_id": current_user_package.package_id,
+        #     "package_name": sub_current.package.package_name,
+        #     "next_payment": sub_current.next_time.isoformat(),
+        #     "start_time": current_user_package.start_time.isoformat(),  # Include other fields as needed
+        #     "available_doc": sub_current.available_doc,  # Include other fields as needed
+        # }
 
         return jsonify({"message": "Successfully retrieved user profile", "data": user_data_json})
     except Exception as e:
@@ -183,10 +191,10 @@ def update_user_service(current_user):
         user_data = request.json
         if user_data.get("username") is not None or user_data.get("user_password") is not None:
             # Use the current_user object directly
-            user_data = User.update(id=current_user.user_id,
+            user_data = User.update(user_id=current_user.user_id,
                                     username=user_data.get("username"),
                                     user_password=user_data.get("user_password"),
-                                    fullname=user_data.get('fullname'),
+                                    user_fullname=user_data.get('fullname'),
                                     phone=user_data.get('phone')
                                     )
 

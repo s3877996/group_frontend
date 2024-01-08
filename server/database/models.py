@@ -50,7 +50,7 @@ class User(db.Model):
     user_email = db.Column(db.String(255), unique=True, nullable=False)
     phone = db.Column(db.String(255), nullable=True)
     stripe_id = db.Column(db.String(255), nullable=True)
-    active = db.Column(db.Boolean, default=True, nullable=True)
+    active = db.Column(db.Boolean, default=True, nullable=False)
     documents = db.relationship('Document', backref='user', lazy=True)
     histories = db.relationship('History', backref='user', lazy=True)
     user_package = db.relationship('UserPackage', back_populates='user', lazy=True)
@@ -145,7 +145,7 @@ class UserPackage(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     package_id = db.Column(db.Integer, db.ForeignKey('packages.id'), nullable=False)
     start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    available_docs = db.Column(db.Integer)
+    available_docs = db.Column(db.Integer, nullable=True)
     user = db.relationship('User', back_populates='user_package')
     package = db.relationship('Package', back_populates='user_package')
 
@@ -171,6 +171,21 @@ class UserPackage(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    @classmethod
+    def create(cls, user_id, package_id=1):
+        user = cls.query.filter_by(user_id=user_id).first()
+        if user:
+            return False  # Indicate that the user already exists
+
+        new_user_package = cls(
+            user_id=user_id,
+            package_id=package_id  # Set package_id explicitly
+        )
+
+        db.session.add(new_user_package)
+        db.session.commit()
+        return new_user_package
 
 # Record list of users that have use the trial package
 class History(db.Model):
