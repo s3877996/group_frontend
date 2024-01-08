@@ -124,21 +124,21 @@ def get_current_user_service(current_user):
         sub_current = Subscription.get_by_user_id(current_user.user_id)
         ################################
         # Add value to user package and call user package of current user here
-        # current_user_package = UserPackage.query.filter(UserPackage.user_id == current_user.user_id).first()
-        # package = Package.get_by_id(current_user_package.package_id)
-        # user_data_json = {
-        #     "limited_docs":package.limited_docs,
-        #     "fullname": current_user.user_fullname,
-        #     "phone": current_user.phone,
-        #     "user_id": current_user.user_id,
-        #     "username": current_user.username,
-        #     "user_email": current_user.user_email,
-        #     "package_id": current_user_package.package_id,
-        #     "package_name": sub_current.package.package_name,
-        #     "next_payment": sub_current.next_time.isoformat(),
-        #     "start_time": current_user_package.start_time.isoformat(),  # Include other fields as needed
-        #     "available_doc": sub_current.available_doc,  # Include other fields as needed
-        # }
+        current_user_package = UserPackage.query.filter(UserPackage.user_id == current_user.user_id).first()
+        package = Package.get_by_id(current_user_package.package_id)
+        user_data_json = {
+            "limited_docs":package.limited_docs,
+            "fullname": current_user.user_fullname,
+            "phone": current_user.phone,
+            "user_id": current_user.user_id,
+            "username": current_user.username,
+            "user_email": current_user.user_email,
+            "package_id": current_user_package.package_id,
+            "package_name": sub_current.package.package_name,
+            "next_payment": sub_current.next_time.isoformat(),
+            "start_time": current_user_package.start_time.isoformat(),  # Include other fields as needed
+            "available_doc": sub_current.available_doc,  # Include other fields as needed
+        }
 
         return jsonify({"message": "Successfully retrieved user profile", "data": user_data_json})
     except Exception as e:
