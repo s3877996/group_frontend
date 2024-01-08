@@ -1,0 +1,1 @@
+stripe listen --forward-to 127.0.0.1:5000/api/payments/webhook  --api-key sk_test_51OP4auC8xglLK7o8T89SeGrELxFEUGxKRF4OXY9shtsmpAZdkgUIhg9jmkgNZUJ3oFTZF9h1izEtP3uem01r36nu00qtXoL3Fh

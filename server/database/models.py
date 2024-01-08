@@ -18,7 +18,6 @@ class Package(db.Model):
     package_price = db.Column(db.Numeric(10, 2), nullable=False)
     stripe_price = db.Column(db.String(255))
     package_description = db.Column(db.Text)
-    user_package = db.relationship('UserPackage', back_populates='package', lazy=True)
     subscriptions = db.relationship('Subscription', back_populates='package', lazy=True)
 
     def __repr__(self):
@@ -53,7 +52,6 @@ class User(db.Model):
     active = db.Column(db.Boolean, default=True, nullable=False)
     documents = db.relationship('Document', backref='user', lazy=True)
     histories = db.relationship('History', backref='user', lazy=True)
-    user_package = db.relationship('UserPackage', back_populates='user', lazy=True)
     subscriptions = db.relationship('Subscription', back_populates='user', lazy=True)
 
     def __repr__(self):
@@ -138,54 +136,6 @@ class User(db.Model):
             return None  # Invalid credentials
 
         return user
-
-class UserPackage(db.Model):
-    __tablename__ = 'user_packages'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-    package_id = db.Column(db.Integer, db.ForeignKey('packages.id'), nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    available_docs = db.Column(db.Integer, nullable=True)
-    user = db.relationship('User', back_populates='user_package')
-    package = db.relationship('Package', back_populates='user_package')
-
-    def __repr__(self):
-        return "<UserPaxkage (user_id='{}', package_id='{}')>"\
-                .format(self.user_id, self.package_id)
-
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def update(self, package_id=None):
-        if package_id:
-            self.package_id = package_id
-
-        db.session.commit()
-        return {
-            "user_id": self.user_id, 
-            "package_id": self.package_id
-        }
-
-    # delete the user_package
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-
-    @classmethod
-    def create(cls, user_id, package_id=1):
-        user = cls.query.filter_by(user_id=user_id).first()
-        if user:
-            return False  # Indicate that the user already exists
-
-        new_user_package = cls(
-            user_id=user_id,
-            package_id=package_id  # Set package_id explicitly
-        )
-
-        db.session.add(new_user_package)
-        db.session.commit()
-        return new_user_package
 
 # Record list of users that have use the trial package
 class History(db.Model):
