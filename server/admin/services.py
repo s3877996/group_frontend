@@ -8,6 +8,7 @@ from server.database.models import Package
 from server.database.schema import PackageSchema
 from server.database.models import User
 from server.database.schema import UserSchema
+from server.database.models import Subscription
 from sqlalchemy.sql import func
 
 package_schema = PackageSchema()
@@ -317,96 +318,104 @@ def get_users_by_name_service(name):
             400 # Bad Request
         )
 
-# # Get users by package id
-# def get_users_by_package_id_service(package_id):
-#     try:
-#         users = User.query \
-#             .join(UserPackage, User.user_id == UserPackage.user_id) \
-#             .join(Package, Package.id == UserPackage.package_id) \
-#             .filter(UserPackage.package_id == package_id) \
-#             .all()
+# Get users by package id
+def get_users_by_package_id_service(package_id):
+    try:
+        users = User.query \
+            .join(Subscription, User.user_id == Subscription.user_id) \
+            .join(Package, Package.id == Subscription.package_id) \
+            .filter(Subscription.package_id == package_id) \
+            .all()
         
-#         if users:
-#             users_data = []
+        package = Package.query.filter(Package.id == package_id).first()
 
-#             for user in users:
-#                 user_dict = {
-#                     "username": user.username,
-#                     "user_email": user.user_email,
-#                     # "user_joined_date": user.user_joined_date,
-#                     # "active": user.active, 
-#                     "package_name": user.package.package_name,
-#                     # "package_start_time": user.user_package.start_time
-#                 }
-#                 users_data.append(user_dict)
+        if users:
+            users_data = []
 
-#             return jsonify(
-#                     {
-#                         "message": "Successfully find users by package id: " + str(package_id),
-#                         "data": users_data
-#                     },
-#                     200
-#                 )
-#         else:
-#             return jsonify(
-#                 {
-#                     "message": "No users found"
-#                 },
-#                 404
-#             )
-#     except Exception as e:
-#         print(e)
-#         db.session.rollback()
-#         return make_response(
-#             {"message": "Unable to find users by package id: " + str(package_id)},
-#             400
+            for user in users:
+                subscription = Subscription.query.filter(Subscription.user_id == user.user_id).first()
+
+                print(users)
+                user_dict = {
+                    "username": user.username,
+                    "user_email": user.user_email,
+                    "user_joined_date": user.user_joined_date,
+                    "active": user.active, 
+                    "package_name": package.package_name,
+                    "package_start_time": subscription.start_time
+                }
+                users_data.append(user_dict)
+
+            return jsonify(
+                    {
+                        "message": "Successfully find users by package id: " + str(package_id),
+                        "data": users_data
+                    },
+                    200
+                )
+        else:
+            return jsonify(
+                {
+                    "message": "No users found"
+                },
+                404
+            )
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return make_response(
+            {"message": "Unable to find users by package id: " + str(package_id)},
+            400
             
-#         )
+        )
     
-# # Get users by package name
-# def get_users_by_package_name_service():
-#     try:
-#         package_name = request.args.get('package_name')
+# Get users by package name
+def get_users_by_package_name_service():
+    try:
+        package_name = request.args.get('package_name')
 
-#         users = User.query \
-#             .join(UserPackage, User.user_id == UserPackage.user_id) \
-#             .join(Package, Package.id == UserPackage.package_id) \
-#             .filter(Package.package_name.like(f'%{package_name}%')) \
-#             .all()
+        users = User.query \
+            .join(Subscription, User.user_id == Subscription.user_id) \
+            .join(Package, Package.id == Subscription.package_id) \
+            .filter(Package.package_name.like(f'%{package_name}%')) \
+            .all()
         
-#         if users:
-#             users_data = []
+        if users:
+            users_data = []
 
-#             for user in users:
-#                 user_dict = {
-#                     "username": user.username,
-#                     "user_email": user.user_email,
-#                     # "user_joined_date": user.user_joined_date,
-#                     # "active": user.active, 
-#                     "package_name": user.package.package_name,
-#                     # "package_start_time": user.user_package.start_time
-#                 }
-#                 users_data.append(user_dict)
+            for user in users:
+                subscription = Subscription.query.filter(Subscription.user_id == user.user_id).first()
+                package = Package.query.filter(Package.id == subscription.package_id).first()
 
-#             return jsonify(
-#                     {
-#                         "message": "Successfully find users by package name: " + package_name,
-#                         "data": users_data
-#                     },
-#                     200
-#                 )
-#         else:
-#             return jsonify(
-#                 {
-#                     "message": "No users found"
-#                 },
-#                 404
-#             )
-#     except Exception as e:
-#         print(e)
-#         db.session.rollback()
-#         return make_response(
-#             {"message": "Unable to find users by package name: " + package_name},
-#             400
+                user_dict = {
+                    "username": user.username,
+                    "user_email": user.user_email,
+                    "user_joined_date": user.user_joined_date,
+                    "active": user.active, 
+                    "package_name": package.package_name,
+                    "package_start_time": subscription.start_time
+                }
+                users_data.append(user_dict)
+
+            return jsonify(
+                    {
+                        "message": "Successfully find users by package name: " + package_name,
+                        "data": users_data
+                    },
+                    200
+                )
+        else:
+            return jsonify(
+                {
+                    "message": "No users found"
+                },
+                404
+            )
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return make_response(
+            {"message": "Unable to find users by package name: " + package_name},
+            400
             
-#         )
+        )
