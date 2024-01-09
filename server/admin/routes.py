@@ -11,6 +11,7 @@ from .services import (\
         get_users_by_name_service, \
         get_users_by_package_id_service, \
         get_users_by_package_name_service, \
+        get_subscriptions_count_service, \
     )
 
 admins = Blueprint('admin', __name__)
@@ -71,3 +72,7 @@ def get_users_by_package_id(package_id):
 @admins.route('/admin/get_users_by_package_name', methods=['GET'])
 def get_users_by_package_name():
     return get_users_by_package_name_service()
+
+@admins.route('/admin/get_subscriptions_count', methods=['GET'])
+def get_subscriptions_count():
+    return get_subscriptions_count_service()

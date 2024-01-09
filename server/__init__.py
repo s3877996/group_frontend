@@ -14,7 +14,7 @@ def create_db(app):
     if not os.path.exists('server/database.db'): 
         with app.app_context():
             # Check if the default package exists
-            default_package = Package.query.get(1)
+            default_package = Package.query.filter(id==1)
 
             if not default_package:
                 # If not, create and add the default package

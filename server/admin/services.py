@@ -145,7 +145,7 @@ def get_package_by_name_service():
         print(e)
         db.session.rollback()
         return make_response(
-            {"message": "Unable to find package by name: " + name},
+            {"message": "Unable to find package by name"},
             400 # Bad Request
         )
 
@@ -417,5 +417,32 @@ def get_users_by_package_name_service():
         return make_response(
             {"message": "Unable to find users by package name: " + package_name},
             400
-            
+        )
+    
+# Get subscription counts
+def get_subscriptions_count_service():
+    try:
+
+        counts = db.session\
+                        .query(Package.package_name, db.Query.count())\
+                        .join(Subscription.package)\
+                        .group_by(Package.package_name).all()
+        
+        if counts:
+            data = [{'package': package, 'count': count} for package, count in counts]
+
+            return jsonify(data)
+
+        else:
+            return jsonify(
+                {"message": "No users found for subscriptions"}, 
+                404
+            )
+        
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return make_response(
+            {"message": "Unable to get subscription count"},
+            400
         )

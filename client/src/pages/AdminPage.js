@@ -1,11 +1,10 @@
 import React from "react";
+import SubscriptionStatistics from "../components/Graph/SubscriptionsStatistics";
 
 
 const AdminPage = ()  =>{
     return (
-
-            <h1>This is AdminPage</h1>
-    
+        <SubscriptionStatistics/>    
     );
 }
 export default AdminPage;

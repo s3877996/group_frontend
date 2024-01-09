@@ -29,6 +29,10 @@ const Routes = () => {
       element:<SubscriptionPage/>
     },
     {
+      path:'/admin',
+      element:<AdminPage/>
+    },
+    {
       path: "/login",
       element:<LoginPage/>,
     },
