@@ -1,5 +1,5 @@
 import React from "react";
-import SubscriptionStatistics from "../components/Graph/SubscriptionsStatistics";
+import SubscriptionStatistics from "../components/Chart/SubscriptionsStatistics";
 
 
 const AdminPage = ()  =>{

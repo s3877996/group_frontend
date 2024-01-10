@@ -422,20 +422,30 @@ def get_users_by_package_name_service():
 # Get subscription counts
 def get_subscriptions_count_service():
     try:
+        # get all package name, 
+        # then checking the number of subscriptions 
+        # for each package
+        packages = Package.query.order_by(Package.id).all()
 
-        counts = db.session\
-                        .query(Package.package_name, db.Query.count())\
-                        .join(Subscription.package)\
-                        .group_by(Package.package_name).all()
+        result = []
+        if packages: 
+            for package in packages: 
+                subscription_count = Subscription.query\
+                                                    .filter(Subscription.package_id == package.id)\
+                                                    .count()
+                print(subscription_count)
+
+                result.append({
+                    "package_id": package.id,
+                    "package_name": package.package_name,
+                    "subscription_count": subscription_count
+                })
+            
+            return jsonify(result)
         
-        if counts:
-            data = [{'package': package, 'count': count} for package, count in counts]
-
-            return jsonify(data)
-
         else:
             return jsonify(
-                {"message": "No users found for subscriptions"}, 
+                {"message": "No packages found for subscription count"}, 
                 404
             )
         
