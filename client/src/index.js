@@ -4,47 +4,19 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 // import {Router} from 'react-router-dom';
 // import {createRoot} from "react-dom";
-import { Toaster } from 'react-hot-toast';
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
-import HomePage from "./pages/HomePage";
-import AdminPage from "./pages/AdminPage";
-import LandingPage from "./pages/LandingPage";
-import RegisterPage from "./pages/RegisterPage";
-import UserProfilePage from "./pages/UserProfilePage";
+import AuthProvider from "./provider/authProvider";
 
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <LandingPage/>,
-    },
-    {
-        path: "/login",
-        element: <LoginPage />,
-    },
-    {
-        path: "/home",
-        element: <HomePage/>,
-    },
-    {
-        path: "/admin",
-        element: <AdminPage/>,
-    },
-    {
-        path: "/register",
-        element: <RegisterPage/>,
-    },
-        {
-        path: "/userprofile",
-        element: <UserProfilePage/>,
-    },
-]);
+import { Toaster } from 'react-hot-toast';
+import Routes from "./routes";
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
-      <RouterProvider router={router} />
+      <AuthProvider>
+      <Routes />
+    </AuthProvider>
       <Toaster />
   </React.StrictMode>
 );

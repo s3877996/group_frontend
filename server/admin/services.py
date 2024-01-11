@@ -2,12 +2,13 @@
 admin tasks: tracking users and subscription packages 
 """
 
-from flask import request, make_response
+from flask import request, make_response, jsonify
 from server.database.db import db
 from server.database.models import Package
 from server.database.schema import PackageSchema
 from server.database.models import User
 from server.database.schema import UserSchema
+from server.database.models import Subscription
 from sqlalchemy.sql import func
 
 package_schema = PackageSchema()
@@ -109,7 +110,7 @@ def get_package_by_id_service(id):
         print(e)
         db.session.rollback()
         return make_response(
-            {"message": "Unable to find package by id: " + id},
+            {"message": "Unable to find package by id: " + str(id)},
             400 # Bad Request
         )
     
@@ -119,7 +120,11 @@ def get_package_by_name_service():
         data = request.args.get('name')
 
         if data:
-            packages = Package.query.join(data).filter(func.lower(Package.package_name).like('%' + data.lower() + '%')).all()
+            packages = Package.query\
+                .join(data)\
+                .filter(func.lower(Package.package_name)\
+                .like('%' + data.lower() + '%'))\
+                .all()
             if packages:
                 return make_response(
                     packages_schema.jsonify(packages),
@@ -140,7 +145,7 @@ def get_package_by_name_service():
         print(e)
         db.session.rollback()
         return make_response(
-            {"message": "Unable to find package by id: " + id},
+            {"message": "Unable to find package by name"},
             400 # Bad Request
         )
 
@@ -208,6 +213,7 @@ def update_package_by_id_service(id):
 
 # Delete package
 def delete_package_by_id_service(id):
+    # Need to check whether package is used
     try:
         package = Package.query.get(id)
 
@@ -232,7 +238,9 @@ def delete_package_by_id_service(id):
             400 # Bad Request
         )
 
+################################
 # Manage users
+# Get all users
 def get_all_users_service():
     try:
         users = User.query.all()
@@ -255,5 +263,196 @@ def get_all_users_service():
             400 # Bad Request
         )
 
-    
+# Get user by id
+def get_user_by_id_service(id):
+    try:
+        user = User.query.get(user_id=id)
 
+        if user:
+            return make_response(
+                user_schema.jsonify(user), 
+                200
+            )
+        else:
+            return make_response(
+                {"message": "User not found"},
+                404 # Not Found
+            )
+
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return make_response(
+            {"message": "Unable to find user by id"},
+            400
+        )
+    
+# Get user by name
+def get_users_by_name_service(name):
+    try:
+        data = request.args.get('name')
+
+        if data:
+            users = User.query.join(data).filter(func.lower(User.username).like('%' + data.lower() + '%')).all()
+            if users:
+                return make_response(
+                    users_schema.jsonify(users),
+                    200
+                )
+            else:
+                return make_response(
+                    {"message": "Username not found"},
+                    404 # Not Found
+                )
+        else:
+            return make_response(
+                {"message": "Invalid request"},
+                400 # Bad Request
+            )
+        
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return make_response(
+            {"message": "Unable to find user by name: " + name},
+            400 # Bad Request
+        )
+
+# Get users by package id
+def get_users_by_package_id_service(package_id):
+    try:
+        users = User.query \
+            .join(Subscription, User.user_id == Subscription.user_id) \
+            .join(Package, Package.id == Subscription.package_id) \
+            .filter(Subscription.package_id == package_id) \
+            .all()
+        
+        package = Package.query.filter(Package.id == package_id).first()
+
+        if users:
+            users_data = []
+
+            for user in users:
+                subscription = Subscription.query.filter(Subscription.user_id == user.user_id).first()
+
+                print(users)
+                user_dict = {
+                    "username": user.username,
+                    "user_email": user.user_email,
+                    "user_joined_date": user.user_joined_date,
+                    "active": user.active, 
+                    "package_name": package.package_name,
+                    "package_start_time": subscription.start_time
+                }
+                users_data.append(user_dict)
+
+            return jsonify(
+                    {
+                        "message": "Successfully find users by package id: " + str(package_id),
+                        "data": users_data
+                    },
+                    200
+                )
+        else:
+            return jsonify(
+                {
+                    "message": "No users found"
+                },
+                404
+            )
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return make_response(
+            {"message": "Unable to find users by package id: " + str(package_id)},
+            400
+            
+        )
+    
+# Get users by package name
+def get_users_by_package_name_service():
+    try:
+        package_name = request.args.get('package_name')
+
+        users = User.query \
+            .join(Subscription, User.user_id == Subscription.user_id) \
+            .join(Package, Package.id == Subscription.package_id) \
+            .filter(Package.package_name.like(f'%{package_name}%')) \
+            .all()
+        
+        if users:
+            users_data = []
+
+            for user in users:
+                subscription = Subscription.query.filter(Subscription.user_id == user.user_id).first()
+                package = Package.query.filter(Package.id == subscription.package_id).first()
+
+                user_dict = {
+                    "username": user.username,
+                    "user_email": user.user_email,
+                    "user_joined_date": user.user_joined_date,
+                    "active": user.active, 
+                    "package_name": package.package_name,
+                    "package_start_time": subscription.start_time
+                }
+                users_data.append(user_dict)
+
+            return jsonify(
+                    {
+                        "message": "Successfully find users by package name: " + package_name,
+                        "data": users_data
+                    },
+                    200
+                )
+        else:
+            return jsonify(
+                {
+                    "message": "No users found"
+                },
+                404
+            )
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return make_response(
+            {"message": "Unable to find users by package name: " + package_name},
+            400
+        )
+    
+# Get subscription counts
+def get_subscriptions_count_service():
+    try:
+        # get all package name, 
+        # then checking the number of subscriptions 
+        # for each package
+        packages = Package.query.order_by(Package.id).all()
+
+        result = []
+        if packages: 
+            for package in packages: 
+                subscription_count = Subscription.query\
+                                                    .filter(Subscription.package_id == package.id)\
+                                                    .count()
+                print(subscription_count)
+
+                result.append({
+                    "package_id": package.id,
+                    "package_name": package.package_name,
+                    "subscription_count": subscription_count
+                })
+            
+            return jsonify(result)
+        
+        else:
+            return jsonify(
+                {"message": "No packages found for subscription count"}, 
+                404
+            )
+        
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return make_response(
+            {"message": "Unable to get subscription count"},
+            400
+        )

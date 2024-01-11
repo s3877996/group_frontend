@@ -21,8 +21,10 @@ import {
    
 } from "@heroicons/react/24/solid";
 //import { MenuItem } from '@mui/material';
+import { useAuth } from '../../provider/authProvider';
 
 const UserMenu = () =>{
+    const { setToken } = useAuth();
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
 
@@ -31,12 +33,26 @@ const UserMenu = () =>{
     },[]);
     
     const handleSignOut = () => {
+        setToken();
         navigate('/');
     }
 
-        const handleUserProfile = () => {
+    const handleUserProfile = () => {
         navigate('/userprofile');
     }
+
+    const handleProfileToggling = () => {
+        navigate('/profile');
+    }
+
+    const handleSubscriptionToggling = () => {
+        navigate('/subscription');
+    }
+
+    const handleHome = () => {
+        navigate('/home');
+    }
+
     return(
         <div className="relative">
             <div className="flex flex-row items-center gap-3">
@@ -55,9 +71,10 @@ const UserMenu = () =>{
 
                     <div className="flex flex-col cursor-pointer">
                     <>
-                        <MenuItem onClick={toggleOpen} label="Home" Icon={HomeIcon} />
-                        <MenuItem onClick={handleUserProfile} label="My profile" Icon={UserCircleIcon}/>
-                        <MenuItem onClick={toggleOpen} label="My subcription" Icon={CreditCardIcon}/>
+                        <MenuItem onClick={handleHome} label="Home" Icon={HomeIcon} />
+                        <MenuItem onClick={handleUserProfile} label="My Profile" Icon={UserCircleIcon}/>
+                        <MenuItem onClick={handleSubscriptionToggling} label="My Subscription" Icon={CreditCardIcon}/>
+                        <MenuItem onClick={handleProfileToggling} label="Detail Information" Icon={ReceiptRefundIcon}/>
                         <hr/>
                         <MenuItem onClick={handleSignOut} label="Sign Out" Icon={() => <PowerIcon className="text-red-500 mr-2 h-5 w-5"/>} />
 
