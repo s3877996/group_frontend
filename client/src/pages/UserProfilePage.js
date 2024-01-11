@@ -6,8 +6,6 @@ const UserProfilePage = ({ token }) =>{
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
-
   useEffect(() => {
     const token = localStorage.getItem('token');
 
