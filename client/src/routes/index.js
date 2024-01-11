@@ -5,6 +5,7 @@ import LoginPage from "../pages/LoginPage";
 import HomePage from "../pages/HomePage";
 import LandingPage from "../pages/LandingPage";
 import AdminPage from "../pages/AdminPage";
+import AdminUserPage from "../pages/AdminUserPage";
 import RegisterPage from "../pages/RegisterPage";
 import ProfilePage from "../pages/ProfilePage";
 import UserProfilePage from "../pages/UserProfilePage";
@@ -29,7 +30,15 @@ const Routes = () => {
       element:<SubscriptionPage/>
     },
     {
-      path:'/admin',
+      path:'/admin/dashboard',
+      element:<AdminPage/>
+    },
+    {
+      path:'/admin/users',
+      element:<AdminUserPage/>
+    },
+    {
+      path:'/admin/packages',
       element:<AdminPage/>
     },
     {

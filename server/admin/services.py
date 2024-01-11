@@ -244,6 +244,7 @@ def delete_package_by_id_service(id):
 def get_all_users_service():
     try:
         users = User.query.all()
+        print(users)
         if users:
             return make_response(
                 users_schema.jsonify(users),
