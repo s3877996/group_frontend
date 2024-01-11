@@ -21,23 +21,23 @@ def register_user_service():
         new_user = User.create(
             username=user_data['username'],
             user_email=user_data['user_email'],
-            user_password=user_data['user_password'],
-            package_id=1  # Set package_id to 1
+            user_password=user_data['user_password']
         )
 
         if new_user is False:
             return jsonify({"message": "User already exists", "error": "Conflict"}), 409
-
-        # Convert the User object to a JSON-serializable dictionary
+    
+        # # Convert the User object to a JSON-serializable dictionary
         user_data_json = {
             "user_id": new_user.user_id,
             "username": new_user.username,
             "user_email": new_user.user_email,
             "package_id": 1,  # Use the actual value of package_id here
-            "start_time": new_user.start_time.isoformat(),
-            # "active": new_user.active,
+            "start_time": new_user.user_joined_date.isoformat(),
+            "active": new_user.active,
             # Include other fields as needed
         }
+
         Subscription.create(
             package_id=1,
             user_id=new_user.user_id,
@@ -76,10 +76,10 @@ def login_service():
                 # Convert the User object to a dictionary
                 user_data = {"user_id": user.user_id, "username": user.username, "user_email": user.user_email,
                              "token": jwt.encode(
-                                 {"user_id": str(user.user_id)},
-                                 secret_key,
-                                 algorithm="HS256"
-                             )}
+                                {"user_id": str(user.user_id)},
+                                secret_key,
+                                algorithm="HS256"
+                            )}
 
                 # Assuming your User object has a 'token' attribute
 
@@ -114,7 +114,7 @@ def get_current_user_service(current_user):
         package = Package.get_by_id(sub_current.package_id)
         user_data_json = {
             "limited_docs":package.limited_docs,
-            "fullname": current_user.fullname,
+            "fullname": current_user.user_fullname,
             "phone": current_user.phone,
             "user_id": current_user.user_id,
             "username": current_user.username,
@@ -122,7 +122,7 @@ def get_current_user_service(current_user):
             "package_id": sub_current.package_id,
             "package_name": sub_current.package.package_name,
             "next_payment": sub_current.next_time.isoformat(),
-            "start_time": current_user.start_time.isoformat(),  # Include other fields as needed
+            "start_time": sub_current.start_time.isoformat(),  # Include other fields as needed
             "available_doc": sub_current.available_doc,  # Include other fields as needed
         }
 
@@ -177,10 +177,10 @@ def update_user_service(current_user):
         user_data = request.json
         if user_data.get("username") is not None or user_data.get("user_password") is not None:
             # Use the current_user object directly
-            user_data = User.update(id=current_user.user_id,
+            user_data = User.update(user_id=current_user.user_id,
                                     username=user_data.get("username"),
                                     user_password=user_data.get("user_password"),
-                                    fullname=user_data.get('fullname'),
+                                    user_fullname=user_data.get('fullname'),
                                     phone=user_data.get('phone')
                                     )
 

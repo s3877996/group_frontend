@@ -13,7 +13,7 @@ const RegisterPage = () => {
 
   const handleSignUp = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/register', {
+      const response = await axios.post('http://127.0.0.1:5000/api/register', {
         username: username,
         user_email: email,
         user_password: password,
