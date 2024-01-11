@@ -44,7 +44,7 @@ class User(db.Model):
     username = db.Column(db.String(255), nullable=False)
     user_fullname = db.Column(db.String(255), nullable=True)
     user_birth_date = db.Column(db.DateTime, nullable=True)
-    user_joined_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_joined_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     user_password = db.Column(db.String(255), nullable=False)
     user_email = db.Column(db.String(255), unique=True, nullable=False)
     phone = db.Column(db.String(255), nullable=True)
@@ -158,7 +158,7 @@ class Document(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
     original_content = db.Column(db.Text)
     corrected_content = db.Column(db.Text)
-    start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    start_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
     adjusted_time = db.Column(db.DateTime)
 
     def __repr__(self):
@@ -179,7 +179,7 @@ class Subscription(db.Model):
     amount = db.Column(db.Integer)
     available_doc = db.Column(db.Integer)
     package_id = db.Column(db.Integer, db.ForeignKey('packages.id'), nullable=True, default=1)
-    start_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    start_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
     next_time = db.Column(db.DateTime, nullable=False)
     adjusted_time = db.Column(db.DateTime)
     session_id = db.Column(db.String(255))
