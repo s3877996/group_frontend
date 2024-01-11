@@ -3,20 +3,62 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 
+const validate = (data, regex) => {
+  return Boolean(data.match(regex));
+};
+
+const validatePassword = (password) => {
+  const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$/;
+  return validate(password, reg);
+};
+
+const validateEmail = (email) => {
+  const regex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$/;
+  return validate(email, regex);
+};
+
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('user'); // Add this line
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  const validateUserInput = () => {
+    const errors = {};
+
+    if (!email) {
+      errors.email = 'Email is required';
+    } else if (!validateEmail(email)) {
+      errors.email = 'Email is invalid';
+    }
+
+    if (!password) {
+      errors.password = 'Password is required';
+    } else if (!validatePassword(password)) {
+      errors.password = 'Password is invalid. It should be at least 8 characters with upper and lower case letters, numbers, and special characters';
+    }
+
+    return errors;
+  };
+
   const handleSignUp = async () => {
+    const inputErrors = validateUserInput();
+
+    // Check if there are any errors
+    if (Object.keys(inputErrors).length > 0) {
+      setError("Incorrect format of email or password. It should be at least 8 characters with upper and lower case letters, numbers, and special characters");
+      return;
+    }
+
     try {
       const response = await axios.post('http://127.0.0.1:5000/api/register', {
         username: username,
         user_email: email,
         user_password: password,
+        user_role: role, // Add this line
       }, {
         headers: {
           'Content-Type': 'application/json',
@@ -99,6 +141,22 @@ const RegisterPage = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+        </div>
+
+                {/* Role */}
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="role">
+            Role
+          </label>
+          <select
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="role"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
         </div>
 
         <div className="flex items-center justify-between">

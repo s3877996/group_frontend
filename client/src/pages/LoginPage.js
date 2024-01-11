@@ -2,7 +2,7 @@ import React, {useState , useCallback} from "react";
 import { useNavigate } from "react-router-dom";
 import {FcGoogle} from 'react-icons/fc';
 import { useAuth } from "../provider/authProvider";
-// https://localhost:8080/api/auth/authenticate
+
 import api from '../api.js';
 const LoginPage = () => {
     // const API_URL = "http://localhost:5000/api/users/login"
@@ -37,7 +37,12 @@ const LoginPage = () => {
             const userData = data.data ? data.data : data;
             // login(userData);
             // Redirect to the desired page upon successful login
-            navigate('/home'); // Change '/dashboard' to the desired route
+
+            if(data.data.user_role === "user" ){
+                navigate('/home'); // Change '/dashboard' to the desired route
+            } else if (data.data.user_role === "admin"){
+                navigate('/admin'); // Change '/dashboard' to the desired route
+            }
 
             // Additional logic to handle user information if needed
             console.log('User information:', userData);

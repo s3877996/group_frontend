@@ -32,6 +32,7 @@ def register_user_service():
             "user_id": new_user.user_id,
             "username": new_user.username,
             "user_email": new_user.user_email,
+            "user_role": new_user.user_role,  # Include the user_role in the response
             "package_id": 1,  # Use the actual value of package_id here
             "start_time": new_user.user_joined_date.isoformat(),
             "active": new_user.active,
@@ -74,7 +75,7 @@ def login_service():
             try:
                 secret_key = os.getenv('SECRET_KEY')
                 # Convert the User object to a dictionary
-                user_data = {"user_id": user.user_id, "username": user.username, "user_email": user.user_email,
+                user_data = {"user_id": user.user_id, "username": user.username, "user_email": user.user_email, "user_role": user.user_role,
                              "token": jwt.encode(
                                 {"user_id": str(user.user_id)},
                                 secret_key,
@@ -111,6 +112,7 @@ def get_current_user_service(current_user):
     try:
         # Convert the User object to a JSON-serializable dictionary
         sub_current = Subscription.get_by_user_id(current_user.user_id)
+
         package = Package.get_by_id(sub_current.package_id)
         user_data_json = {
             "limited_docs":package.limited_docs,

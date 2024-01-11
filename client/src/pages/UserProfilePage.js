@@ -9,18 +9,29 @@ const UserProfilePage = ({ token }) =>{
     const storedToken = localStorage.getItem('token');
     const [fullname, setFullname] = useState('');
     const [phone, setPhone] = useState('');
+    const [formattedStartTime, setformattedStartTime] = useState('');
     const navigate = useNavigate();
 
+
+    const handleEditUserProfile = () => {
+        navigate('/profile');
+    }
 
   useEffect(() => {
         // if (storedToken){
         // setAuthToken(storedToken);
         api.get('/api/users/me') // Assuming this is backend endpoint
             .then(response => {
-                console.log(response.data)
+                const userData = response.data.data;
+
+                // Format start_time
+                const formattedStartTime = new Date(userData.start_time).toLocaleDateString('en-US');
                 setUserData(response.data.data);
                 setFullname(response.data.data.fullname)
                 setPhone(response.data.data.phone)
+                setformattedStartTime(formattedStartTime);
+                console.log(response.data)
+
                 /*document.getElementById("username").innerHTML = `${userData.username}`;
                 document.getElementById("email").innerHTML = `${userData.user_email}`;
                 document.getElementById("packageId").innerHTML = `${userData.package_id}`;*/
@@ -49,9 +60,9 @@ const UserProfilePage = ({ token }) =>{
             <img className="h-48 w-full object-cover md:w-48 mx-auto sm: rounded-none md:rounded-full" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80" alt="Profile Picture" />
           </div>
           <div className="p-8">
-            <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Full Stack Developer</div>
+            <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Account</div>
             <a href="#" className="block mt-1 text-lg leading-tight font-medium text-black hover:underline">{userData?.username}</a>
-            <p className="mt-2 text-gray-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris. </p>
+            <p className="mt-2 text-gray-500"> {userData?.user_role}</p>
             <div className="mt-4 mr:auto">
               <div className="flex flex-col">
                 <div className="flex flex-row mt-4">
@@ -59,20 +70,7 @@ const UserProfilePage = ({ token }) =>{
                     <span className="text-gray-500">Email</span>
                     <p className="text-black font-semibold">{userData?.user_email}</p>
                   </div>
-                  <div className="flex-1">
-                    <span className="text-gray-500">Phone</span>
-                    <p className="text-black font-semibold">{userData?.phone}</p>
-                  </div>
-                </div>
-                <div className="flex flex-row mt-4">
-                  <div className="flex-1 ">
-                    <span className="text-gray-500">Address</span>
-                    <p className="text-black font-semibold">123 Main St, San Francisco, CA 94110</p>
-                  </div>
-                  <div className="flex-1">
-                    <span className="text-gray-500">Birthday</span>
-                    <p className="text-black font-semibold">January 1, 1990</p>
-                  </div>
+
                 </div>
                 <div className="flex flex-row mt-4">
                   <div className="flex-1">
@@ -81,7 +79,7 @@ const UserProfilePage = ({ token }) =>{
                   </div>
                   <div className="flex-1">
                     <span className="text-gray-500">Join Day</span>
-                    <p className="text-black font-semibold">{userData?.start_time}</p>
+                    <p className="text-black font-semibold">{formattedStartTime}</p>
                   </div>
                 </div>
                 <div className="flex flex-row mt-4">
@@ -93,7 +91,7 @@ const UserProfilePage = ({ token }) =>{
               </div>
             </div>
             <div className="mt-8">
-              <button type="button" className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              <button type="button" onClick={handleEditUserProfile} className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Edit Profile
               </button>
             </div>

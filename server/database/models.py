@@ -48,6 +48,7 @@ class User(db.Model):
     user_password = db.Column(db.String(255), nullable=False)
     user_email = db.Column(db.String(255), unique=True, nullable=False)
     phone = db.Column(db.String(255), nullable=True)
+    user_role = db.Column(db.String(50), nullable=False, default='user')  # 'user' or 'admin'
     stripe_id = db.Column(db.String(255), nullable=True)
     active = db.Column(db.Boolean, default=True, nullable=False)
     documents = db.relationship('Document', backref='user', lazy=True)
@@ -67,7 +68,7 @@ class User(db.Model):
         db.session.commit()
 
     @classmethod
-    def create(cls, username, user_email, user_password, package_id=1):
+    def create(cls, username, user_email, user_password, user_role='user', package_id=1):
         user = cls.query.filter_by(user_email=user_email).first()
         if user:
             return False  # Indicate that the user already exists
@@ -77,6 +78,7 @@ class User(db.Model):
             username=username,
             user_email=user_email,
             user_password=hashed_password,
+            user_role=user_role,
             # package_id=package_id  # Set package_id explicitly
         )
         db.session.add(new_user)
