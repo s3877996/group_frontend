@@ -60,7 +60,7 @@ const UserProfilePage = ({ token }) =>{
             <img className="h-48 w-full object-cover md:w-48 mx-auto sm: rounded-none md:rounded-full" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80" alt="Profile Picture" />
           </div>
           <div className="p-8">
-            <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Account</div>
+            <div className="uppercase tracking-wide text-sm text-green-500 font-semibold">Account</div>
             <a href="#" className="block mt-1 text-lg leading-tight font-medium text-black hover:underline">{userData?.username}</a>
             <p className="mt-2 text-gray-500"> {userData?.user_role}</p>
             <div className="mt-4 mr:auto">
@@ -91,7 +91,7 @@ const UserProfilePage = ({ token }) =>{
               </div>
             </div>
             <div className="mt-8">
-              <button type="button" onClick={handleEditUserProfile} className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              <button type="button" onClick={handleEditUserProfile} className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-500 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Edit Profile
               </button>
             </div>

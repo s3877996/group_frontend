@@ -75,7 +75,12 @@ def login_service():
             try:
                 secret_key = os.getenv('SECRET_KEY')
                 # Convert the User object to a dictionary
-                user_data = {"user_id": user.user_id, "username": user.username, "user_email": user.user_email, "user_role": user.user_role,
+                user_data = {"user_id": user.user_id,
+                             "username": user.username,
+                             "user_email": user.user_email,
+                             "user_role": user.user_role,
+                             "fullname": user.user_fullname,
+                             "phone": user.phone,
                              "token": jwt.encode(
                                 {"user_id": str(user.user_id)},
                                 secret_key,
