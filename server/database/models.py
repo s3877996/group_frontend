@@ -5,6 +5,7 @@ from .db import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 # User when does not subsribe new package will be deactivated
 
 # Subcription package
@@ -30,12 +31,15 @@ class Package(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
     @classmethod
     def get_all(cls):
-        return cls.query.filter(cls.package_price >0).order_by(cls.package_price).all()
+        return cls.query.filter(cls.package_price > 0).order_by(cls.package_price).all()
+
     @classmethod
     def get_by_id(cls, id):
         return cls.query.filter(cls.id == id).first()
+
 
 # User
 class User(db.Model):
@@ -88,10 +92,12 @@ class User(db.Model):
     @classmethod
     def get_all(cls):
         return cls.query.all()
+
     @classmethod
-    def update_stripe(cls,id,stripe_id):
-        cls.query.filter(cls.user_id==id).update({'stripe_id':stripe_id})
+    def update_stripe(cls, id, stripe_id):
+        cls.query.filter(cls.user_id == id).update({'stripe_id': stripe_id})
         db.session.commit()
+
     @classmethod
     def get_by_id(cls, user_id):
         return cls.query.join(Package).filter(cls.user_id == user_id).first()
@@ -100,25 +106,46 @@ class User(db.Model):
     def get_by_email(cls, user_email):
         return cls.query.filter_by(user_email=user_email).first()
 
+    # @classmethod
+    # def update(cls, id, username=None, user_password=None, stripe_id=None, fullname=None, phone=None):
+    #     user = cls.query.filter(cls.user_id == id).first()
+    #     if username:
+    #         user.username = username
+    #     if stripe_id:
+    #         user.stripe_id = stripe_id
+    #     if fullname:
+    #         user.fullname = fullname
+    #     if phone:
+    #         user.phone = phone
+    #     if user_password:
+    #         # print(f"Before Update - Hashed Password: {self.user_password}")
+    #         user.password = generate_password_hash(user_password)
+    #         # print(f"After Update - Hashed Password: {self.user_password}")
+    #     db.session.merge(user)
+    #     db.session.flush()
+    #     db.session.commit()
+    #     return {"id": user.user_id}
+
     @classmethod
-    def update(cls,id, username=None, user_password=None, stripe_id=None,fullname=None,phone=None):
-        user = cls.query.filter(cls.user_id==id).first()
-        if username:
-            user.username = username
-        if stripe_id:
-            user.stripe_id = stripe_id
-        if fullname:
-            user.fullname = fullname
-        if phone:
-            user.phone = phone
-        if user_password:
-            # print(f"Before Update - Hashed Password: {self.user_password}")
-            user.password = generate_password_hash(user_password)
-            # print(f"After Update - Hashed Password: {self.user_password}")
-        db.session.merge(user)
-        db.session.flush()
-        db.session.commit()
-        return {"id":user.user_id}
+    def update(cls, user_id, username=None, user_password=None, stripe_id=None, user_fullname=None, phone=None):
+        user = cls.query.filter_by(user_id=user_id).first()
+
+        if user:
+            if username:
+                user.username = username
+            if stripe_id:
+                user.stripe_id = stripe_id
+            if user_fullname:
+                user.user_fullname = user_fullname  # Updated argument name here
+            if phone:
+                user.phone = phone
+            if user_password:
+                user.user_password = generate_password_hash(user_password)
+
+            db.session.commit()
+            return {"id": user.user_id}
+        else:
+            return {"message": "User not found"}, 404
 
     def set_password(self, password):
         self.user_password = generate_password_hash(password)
@@ -139,6 +166,7 @@ class User(db.Model):
 
         return user
 
+
 # Record list of users that have use the trial package
 class History(db.Model):
     __tablename__ = 'histories'
@@ -147,10 +175,11 @@ class History(db.Model):
 
     def __repr__(self):
         return f'<History {self.user_id}>'
-    
+
     def save(self):
         db.session.add(self)
         db.session.commit()
+
 
 # Uploaded Document
 class Document(db.Model):
@@ -173,6 +202,7 @@ class Document(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
 
 class Subscription(db.Model):
     __tablename__ = 'subscriptions'
@@ -233,5 +263,3 @@ class Subscription(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
-
-

@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
+import { toast, Toaster} from 'react-hot-toast';
 import api, { setAuthToken } from '../api.js';
 import PaymentHistoryTable from './PaymentHistoryTable';
 import { useNavigate } from 'react-router-dom';// Import useHistory from react-router-dom
 import Navbar from "../components/Navigation/Navbar"
 import SubscriptionModal from './SubscriptionModal';
+
+
+const validate = (data, regex) => {
+  return Boolean(data.match(regex));
+};
+
+const validatePassword = (password) => {
+  const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$/;
+  return validate(password, reg);
+};
+
+
 const ProfilePage = () => {
     const [isModalOpen, setModalOpen] = useState(false);
     const handleOpenModal = () => {
@@ -20,12 +33,17 @@ const ProfilePage = () => {
         user_email: '',
         package_id: '',
     });
+
+
     const storedToken = localStorage.getItem('token');
     const [password, setPassword] = useState('');
     const [fullname, setFullname] = useState('');
     const [phone, setPhone] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [error, setError] = useState('');
 
+
+    // fetch user profile details
     useEffect(() => {
         // if (storedToken){
         // setAuthToken(storedToken);
@@ -41,7 +59,9 @@ const ProfilePage = () => {
             })
             .catch(error => {
                 console.error('Error fetching user data:', error);
+
             });
+
 
         // else{
         //     navigate('/login');
@@ -51,120 +71,120 @@ const ProfilePage = () => {
 
     }, [navigate]);
 
+
+    //update profile
     const handleChangePassword = async () => {
+        // Validate the new password
+        if (!validatePassword(password)) {
+            toast.error('Invalid password. It must contain at least one lowercase letter, one uppercase letter, one digit, one special character, and be between 8 to 20 characters long.', {
+                duration: 5000,
+            });
+            return;
+        }
+
         try {
             // Make API request to update password
             const response = await api.put('/api/users/me', {
                 user_password: password,
-                new_password: newPassword,
                 fullname: fullname,
                 phone:phone
             });
 
             // Handle success, show a success message
             console.log(response.data.message);
+
+            // Display a success toast, with a title
+            toast.success("Update user details successful!", {
+                duration: 3000,
+            });
         } catch (error) {
             // Handle error, show an error message
             console.error('Error updating password:', error.response.data.message);
+            // Display an error toast, with a title
+            toast.error(`Updating failed: ${error.response.data.message || 'Unknown error'}`, {
+                duration: 3000,
+            });
         }
     };
 
-    return (
-        <div className="flex flex-col ">
-        <div className="flex-grow bg-white-700 overflow-auto">
-            <div className="mx-auto max-w-screen-xl h-full w-full">
-              <Navbar/>
-              </div>
-        <div className="container mx-auto mt-8">
-            <div className="max-w-md mx-auto bg-white p-6 rounded-md shadow-md">
-                <h2 className="text-2xl font-bold mb-4">User Profile</h2>
-                <img
-                    src="https://placekitten.com/150/150"
-                    alt="Profile"
-                    className="rounded-full w-20 h-20 mx-auto mb-4"
-                />
-                <p>
-                    <strong>Username:</strong> {userData.username}
-                </p>
-                <p>
-                    <strong>Email:</strong> {userData.user_email}
-                </p>
-                <p>
-                    <strong>Package :</strong> {userData.package_name}
-                </p>
-                <p>
-                    <strong>Limited Document :</strong> {userData.limited_docs}
-                </p>
-                <p>
-                    <strong>Available Document :</strong> {userData.available_doc}
-                </p>
-                <div className="mt-4">
-                    <h3 className="text-xl font-bold mb-2">Change Information</h3>
-                    <div className="mb-4">
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-600">
-                            Full Name:
-                        </label>
-                        <input
-                            type="text"
-                            id="fullname"
-                            className="mt-1 p-2 w-full border rounded-md"
-                            value={fullname}
-                            onChange={(e) => setFullname(e.target.value)}
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-600">
-                            Phone:
-                        </label>
 
-                        <input
-                            type="phone"
-                            id="phone"
-                            className="mt-1 p-2 w-full border rounded-md"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
+return (
+    <div className="flex flex-col h-screen bg-gray-100">
+        <Navbar />
+        <main className="flex items-center justify-center h-full overflow-auto">
+            <div className="container mx-auto mt-8">
+                <div className="max-w-md mx-auto bg-white p-6 rounded-md shadow-md">
+                    <h2 className="text-2xl font-bold mb-4 text-center">User Profile</h2>
+                    <div className="flex justify-center items-center mb-4">
+                        <img
+                            src="https://placekitten.com/150/150"
+                            alt="Profile"
+                            className="rounded-full w-20 h-20"
                         />
                     </div>
-                    <div className="mb-4">
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-600">
-                            Old Password:
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            className="mt-1 p-2 w-full border rounded-md"
-                            placeholder="Enter your old password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+                    <div className="space-y-2">
+                        <p><strong>Username:</strong> {userData.username}</p>
+                        <p><strong>Email:</strong> {userData.user_email}</p>
+                        <p><strong>Package :</strong> {userData.package_name}</p>
+                        <p><strong>Limited Document :</strong> {userData.limited_docs}</p>
+                        <p><strong>Available Document :</strong> {userData.available_doc}</p>
                     </div>
-                    <div className="mb-4">
-                        <label htmlFor="newPassword" className="block text-sm font-medium text-gray-600">
-                            New Password:
-                        </label>
-                        <input
-                            type="password"
-                            id="newPassword"
-                            className="mt-1 p-2 w-full border rounded-md"
-                            placeholder="Enter your new password"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                        />
+                    <div className="mt-4">
+                        <h3 className="text-xl font-bold mb-2">Change Information</h3>
+                        <div className="space-y-4">
+                            <div>
+                                <label htmlFor="fullname" className="block text-sm font-medium text-gray-600">
+                                    Full Name:
+                                </label>
+                                <input
+                                    type="text"
+                                    id="fullname"
+                                    className="mt-1 p-2 w-full border rounded-md"
+                                    value={fullname}
+                                    onChange={(e) => setFullname(e.target.value)}
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="phone" className="block text-sm font-medium text-gray-600">
+                                    Phone:
+                                </label>
+                                <input
+                                    type="phone"
+                                    id="phone"
+                                    className="mt-1 p-2 w-full border rounded-md"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="password" className="block text-sm font-medium text-gray-600">
+                                    New Password:
+                                </label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    className="mt-1 p-2 w-full border rounded-md"
+                                    placeholder="Enter your new password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        <button
+                            className="w-full bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-4"
+                            onClick={handleChangePassword}
+                        >
+                            Change Password
+                        </button>
                     </div>
-                    <button
-                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                        onClick={handleChangePassword}
-                    >
-                        Change Password
-                    </button>
                 </div>
             </div>
-        </div>
-        </div>
-        </div>
+        </main>
+    </div>
+);
 
 
-    );
+
 };
 
 export default ProfilePage;
