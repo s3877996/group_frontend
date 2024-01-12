@@ -44,7 +44,7 @@ def register_user_service():
             user_id=new_user.user_id,
             amount=0,
             available_doc=10,
-            next_time=datetime.utcnow() + timedelta(days=14)
+            next_time=datetime.now() + timedelta(days=14)
         )
         return jsonify({"message": "Successfully created new user", "data": user_data_json}), 201
 

@@ -7,8 +7,8 @@ const UserTable = () => {
     useEffect(() => {
         api.get('/admin/get_all_users')
             .then(response => {
-                console.log(response.data);
-                setUserData(response.data);
+                console.log("user data:", response.data);
+                setUserData(response.data.data);
             })
             .catch(err => {
                 console.log('Error fetching user info for admin page: ', err);
@@ -16,46 +16,44 @@ const UserTable = () => {
     }, []);
 
     return (
-        <div class="mt-32 w-full min-w-max table-auto text-left">
+        <div class="mt-24 w-full min-w-max table-auto text-left">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-white-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th scope="col" class="px-6 py-3">
-                            User Email
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Joined Date
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Active Status
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Stripe
-                        </th>
+                        <th scope="col" class="px-6 py-3">Username</th>
+                        <th scope="col" class="px-6 py-3">Email</th>
+                        <th scope="col" class="px-6 py-3">Joined Date</th>
+                        <th scope="col" class="px-6 py-3">Active Status</th>
+                        <th scope="col" class="px-6 py-3">Subscribed Package</th>
+                        <th scope="col" class="px-6 py-3">Subscribed Time</th>
                     </tr>
                 </thead>
                 <tbody>
                 {userData.map((user) => (
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={user.user_id}>
+                        <td class="px-6 py-4">
                             {user.username}
-                        </th>
+                        </td>
+                        <td class="px-6 py-4">
+                            {user.user_email}
+                        </td>
                         <td class="px-6 py-4">
                             {user.user_joined_date}
                         </td>
                         <td class="px-6 py-4">
-                            {user.active}
+                            {user.user_active ? "Active" : "Deactivated"}
                         </td>
                         <td class="px-6 py-4">
-                            {user.stripe_id}
+                            {user.package_name}
+                        </td>
+                        <td class="px-6 py-4">
+                            {user.start_time}
                         </td>
                     </tr>
                     ))}
                 </tbody>
             </table>
         </div>
-
-            
     )
 };
 
