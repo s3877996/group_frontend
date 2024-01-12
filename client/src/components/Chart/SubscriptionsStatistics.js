@@ -63,7 +63,9 @@ function SubscriptionStatistics() {
                         }}
                     />
                 ) : (
-                    <p>Loading chart data...</p>
+                    <div className="flex justify-center items-center h-screen">
+                        <p><strong>Loading chart data...</strong></p>
+                    </div>
                 )}
             </div>
         </div>

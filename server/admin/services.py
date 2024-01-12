@@ -71,7 +71,7 @@ def add_subscription_service():
 # Get all packages
 def get_all_packages_service():
     try:
-        packages = Package.query.all()
+        packages = Package.query.order_by(Package.id).all()
         if packages:
             return make_response(
                 packages_schema.jsonify(packages),
@@ -162,6 +162,7 @@ def update_package_by_id_service(id):
         limited_docs = data['limited_docs']
         package_price = data['package_price']
         package_description = data['package_description']
+        thumbnail = data['thumbnail']
 
         if package_name and package_period and limited_docs and package_price and package_description:
             package = Package.query.get(id)
@@ -188,6 +189,9 @@ def update_package_by_id_service(id):
                 package.limited_docs = limited_docs
                 package.package_price = package_price
                 package.package_description = package_description
+
+                if thumbnail:
+                    package.thumbnail = thumbnail
 
                 # Commit changes
                 db.session.commit()

@@ -17,11 +17,6 @@ from .services import (\
 
 admins = Blueprint('admin', __name__)
 
-@admins.route('/admin')
-def admin():
-    # return admin page
-    return 'Admin page'
-
 # Manage subscriptions
 # Add package
 @admins.route('/admin/add_package', methods=['POST'])
@@ -31,13 +26,13 @@ def add_subscription():
 
 # Get all packages
 @admins.route('/admin/get_all_packages', methods=['GET'])
-@token_required
+# @token_required
 def get_all_packages():
     return get_all_packages_service()
 
 # Get package by id
 @admins.route('/admin/get_package/<int:package_id>', methods=['GET'])
-@token_required
+# @token_required
 def get_package_by_id(package_id):
     return get_package_by_id_service(package_id)
 
@@ -49,7 +44,7 @@ def get_package_by_name():
 
 # Update package by id
 @admins.route('/admin/update_package/<int:package_id>', methods=['PUT'])
-@token_required
+# @token_required
 def update_package_by_id(package_id):
     return update_package_by_id_service(package_id)
 
@@ -61,7 +56,7 @@ def delete_package_by_id(package_id):
 
 # Get all users
 @admins.route('/admin/get_all_users', methods=['GET'])
-@token_required
+# @token_required
 def get_all_users():
     return get_all_users_service()
 
@@ -86,6 +81,6 @@ def get_users_by_package_name():
     return get_users_by_package_name_service()
 
 @admins.route('/admin/get_subscriptions_count', methods=['GET'])
-@token_required
+# @token_required
 def get_subscriptions_count():
     return get_subscriptions_count_service()
