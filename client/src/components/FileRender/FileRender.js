@@ -1,12 +1,56 @@
 import React, {useState} from "react";
+import axios from 'axios';
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 
 const FileRender = () => {
     const [wordFile, setWordFile] = useState(null);
+    const [uploadedFilePath, setUploadedFilePath] = useState(null);
+    //const [fileType, setFileType] = useState('');
+    const [docxHtmlContent, setDocxHtmlContent] = useState('');
 
-    const handleFileChange = (event) => {
+
+    const handleFileChange = async (event) => {
         const file = event.target.files[0];
         setWordFile(file);
+
+        const authToken = localStorage.getItem('token');
+
+        //Create FormData and append the file
+        const formData = new FormData();
+        formData.append('file', file);
+
+        //upload file to the backend
+        try {
+            const response = await axios.post('http://127.0.0.1:5000/document/upload',formData, {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`  // Include the auth token in the request header
+                },
+            });
+
+            console.log(response.data);
+
+        } catch (error) {
+            if (error.response) {
+                console.error('Error response:', error.response.data);
+                console.error('Error status:', error.response.status);
+                console.error('Error headers:', error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error('Error request:', error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error('Error:', error.message);
+            }
+            console.error('Error config:', error.config);
+            console.log('Error uploading file:', error);
+        }
+    };
+
+    const renderDocumentPreview = () => {
+        // if (!uploadedFilePath) return null;
+        // return <iframe src={`https://docs.google.com/gview?url=${uploadedFilePath}&embedded=true`} style={{ width: '100%', height: '500px' }} />;   
+        
+
     };
     
     return (
@@ -50,16 +94,13 @@ const FileRender = () => {
             {wordFile && (
                 <div className="flex items-stretch justify-center h-screen">
                     <div className="self-center">
-                        <DocViewer
-                            documents={[{ uri: URL.createObjectURL(wordFile), fileType: wordFile.type, fileName: wordFile.name }]}
-                            pluginRenderers={DocViewerRenderers}
-                        />
+                        {renderDocumentPreview()}
                     </div>
                 </div>
                 
             )}
         </div>
     );
-}
+};
 
 export default FileRender;

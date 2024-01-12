@@ -53,6 +53,7 @@ def validate_email_and_password(email, password):
         errors['email'] = 'Email is invalid'
 
     if not validate_password(password):
-        errors['password'] = 'Password is invalid. It should be at least 8 characters with upper and lower case letters, numbers, and special characters'
+        errors['password'] = 'Password is invalid. It should be at least 8 characters with upper and lower case ' \
+                             'letters, numbers, and special characters '
 
     return errors if errors else True

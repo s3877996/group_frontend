@@ -4,6 +4,7 @@ from .admin.routes import admins
 from .auth.routes import auth
 from .payment.routes import payment
 from .package.routes import package
+from .document.routes import documents
 from flask_cors import CORS
 import os, jwt
 
@@ -34,6 +35,8 @@ def create_db(app):
 def create_app(config_file='config.py'):
     app = Flask(__name__)
     app.config.from_pyfile(config_file)
+    app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'server/upload_file')
+    app.config['DOWNLOAD_FOLDER'] = os.path.join(os.getcwd(), 'server/download_file')
 
     # Initialize database
     db.init_app(app)
@@ -51,6 +54,7 @@ def create_app(config_file='config.py'):
     app.register_blueprint(package, url_prefix='/api')
 
     app.register_blueprint(admins)
+    app.register_blueprint(documents, url_prefix='/document')
 
     # Run application
     return app
