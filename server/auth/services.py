@@ -17,16 +17,20 @@ def register_user_service():
         if not user_data:
             return jsonify({"message": "Please provide user details", "error": "Bad request"}), 400
 
+        # Get user_role from request data, default to 'user'
+        user_role = user_data.get('user_role', 'user')
+
         # Call User.create with the appropriate arguments, including package_id=1
         new_user = User.create(
             username=user_data['username'],
             user_email=user_data['user_email'],
-            user_password=user_data['user_password']
+            user_password=user_data['user_password'],
+            user_role=user_role  # Pass user_role to the create method
         )
 
         if new_user is False:
             return jsonify({"message": "User already exists", "error": "Conflict"}), 409
-    
+
         # # Convert the User object to a JSON-serializable dictionary
         user_data_json = {
             "user_id": new_user.user_id,
@@ -44,7 +48,7 @@ def register_user_service():
             user_id=new_user.user_id,
             amount=0,
             available_doc=10,
-            next_time=datetime.utcnow() + timedelta(days=14)
+            next_time=datetime.now() + timedelta(days=14)
         )
         return jsonify({"message": "Successfully created new user", "data": user_data_json}), 201
 
@@ -59,10 +63,10 @@ def login_service():
         data = request.json
         if not data:
             return {
-                "message": "Please provide user details",
-                "data": None,
-                "error": "Bad request"
-            }, 400
+                       "message": "Please provide user details",
+                       "data": None,
+                       "error": "Bad request"
+                   }, 400
         # validate input
         is_validated = validate_email_and_password(data.get('email'), data.get('password'))
         if is_validated is not True:
@@ -82,10 +86,10 @@ def login_service():
                              "fullname": user.user_fullname,
                              "phone": user.phone,
                              "token": jwt.encode(
-                                {"user_id": str(user.user_id)},
-                                secret_key,
-                                algorithm="HS256"
-                            )}
+                                 {"user_id": str(user.user_id)},
+                                 secret_key,
+                                 algorithm="HS256"
+                             )}
 
                 # Assuming your User object has a 'token' attribute
 
@@ -96,20 +100,20 @@ def login_service():
             except Exception as e:
                 print(e)
                 return {
-                    "error": "Something went wrong",
-                    "message": str(e)
-                }, 500
+                           "error": "Something went wrong",
+                           "message": str(e)
+                       }, 500
         return {
-            "message": "Error fetching auth token!, invalid email or password",
-            "data": None,
-            "error": "Unauthorized"
-        }, 404
+                   "message": "Error fetching auth token!, invalid email or password",
+                   "data": None,
+                   "error": "Unauthorized"
+               }, 404
     except Exception as e:
         return {
-            "message": "Something went wrong!",
-            "error": str(e),
-            "data": None
-        }, 500
+                   "message": "Something went wrong!",
+                   "error": str(e),
+                   "data": None
+               }, 500
 
 
 # Get current user
@@ -120,7 +124,7 @@ def get_current_user_service(current_user):
 
         package = Package.get_by_id(sub_current.package_id)
         user_data_json = {
-            "limited_docs":package.limited_docs,
+            "limited_docs": package.limited_docs,
             "fullname": current_user.user_fullname,
             "phone": current_user.phone,
             "user_id": current_user.user_id,
