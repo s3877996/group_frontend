@@ -9,7 +9,7 @@ payment = Blueprint('payments', __name__)
 @payment.route("payments/create-payment-link", methods=["POST"])
 @token_required
 def create_link(current_user):
-    print(current_user)
+    # print(current_user)
     return create_payment_link(current_user)
 
 
