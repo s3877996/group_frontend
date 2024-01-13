@@ -191,6 +191,7 @@ class Document(db.Model):
     corrected_content = db.Column(db.Text)
     start_time = db.Column(db.DateTime, nullable=False, default=datetime.now)
     adjusted_time = db.Column(db.DateTime)
+    file_path = db.Column(db.String(255))
 
     def __repr__(self):
         return f'<Document {self.document_name}>'
@@ -203,6 +204,22 @@ class Document(db.Model):
         db.session.delete(self)
         db.session.commit()
 
+class CorrectedDocument(db.Model):
+    __tablename__ = 'corrected_documents'
+    corrected_document_id = db.Column(db.Integer, primary_key=True)
+    original_document_id = db.Column(db.Integer, db.ForeignKey('documents.document_id'), nullable=False)
+    corrected_content = db.Column(db.Text)
+    correction_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    version = db.Column(db.Integer, default=1)
+    file_path = db.Column(db.String(255))
+    corrected_document_name = db.Column(db.String(255))
+
+    def __repr__(self):
+        return f'<CorrectedDocument {self.corrected_document_name}>'
+    
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
 class Subscription(db.Model):
     __tablename__ = 'subscriptions'
