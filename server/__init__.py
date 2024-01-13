@@ -49,8 +49,12 @@ def create_app(config_file='config.py'):
     app.register_blueprint(auth, url_prefix='/api')
     app.register_blueprint(payment, url_prefix='/api')
     app.register_blueprint(package, url_prefix='/api')
-
     app.register_blueprint(admins)
+
+    # # Print out all routes
+    # print("Registered Routes:")
+    # for rule in app.url_map.iter_rules():
+    #     print(f"{rule.endpoint}: {rule.rule}")
 
     # Run application
     return app
