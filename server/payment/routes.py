@@ -26,5 +26,3 @@ def stripe_webhook():
 
 def handle_checkout_session(session):
     print("Payment was successful.")
-
-
