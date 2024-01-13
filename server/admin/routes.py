@@ -13,6 +13,7 @@ from .services import (\
         get_users_by_package_id_service, \
         get_users_by_package_name_service, \
         get_subscriptions_count_service, \
+        get_subscriptions_revenue_service, \
     )
 from ..auth.auth_middleware import token_required
 
@@ -40,7 +41,7 @@ def get_package_by_id(package_id):
     return get_package_by_id_service(package_id)
 
 
-# Get package by name
+# Get package by name -- Search (if have)
 @admins.route('/admin/get_package', methods=['GET'])
 # @token_required(required_role='admin')
 def get_package_by_name():
@@ -96,3 +97,8 @@ def get_users_by_package_name():
 # @token_required(required_role='admin')
 def get_subscriptions_count():
     return get_subscriptions_count_service()
+
+@admins.route('/admin/get_revenue', methods=['GET'])
+# @token_required(required_role='admin')
+def get_subscriptions_revenue():
+    return get_subscriptions_revenue_service()

@@ -520,3 +520,51 @@ def get_subscriptions_count_service():
             {"message": "Unable to get subscription count"},
             400
         )
+
+# Get total revenue
+def get_subscriptions_revenue_service():
+    try:
+        # get all package name, 
+        # then checking the number of subscriptions 
+        # for each package
+        packages = Package.query.order_by(Package.id).all()
+
+        result = []
+        total_revenue = 0 
+        if packages: 
+            for package in packages: 
+                subscription_count = Subscription.query\
+                                                    .filter(Subscription.package_id == package.id)\
+                                                    .count()
+                # print(subscription_count)
+
+                revenue = subscription_count * package.package_price
+
+                result.append({
+                    "package_id": package.id,
+                    "package_name": package.package_name,
+                    "subscription_revenue": revenue
+                })
+
+                total_revenue += revenue
+            
+            return jsonify(
+                {
+                    "data": result,
+                    "total": total_revenue
+                }
+            )
+        
+        else:
+            return jsonify(
+                {"message": "No packages found for subscription count"}, 
+                404
+            )
+        
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return make_response(
+            {"message": "Unable to get subscription count"},
+            400
+        )
