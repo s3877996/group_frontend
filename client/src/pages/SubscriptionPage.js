@@ -32,7 +32,7 @@ const SubscriptionPage = () => {
           setApiLink(link);
           setLoading(false);
           // Open the link in a new window/tab
-          window.open(link, '_blank');
+          window.open(link, '_self');
     }
     useEffect(() => {
         api.get('/api/packages')

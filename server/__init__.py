@@ -52,7 +52,6 @@ def create_app(config_file='config.py'):
     app.register_blueprint(auth, url_prefix='/api')
     app.register_blueprint(payment, url_prefix='/api')
     app.register_blueprint(package, url_prefix='/api')
-
     app.register_blueprint(admins)
     app.register_blueprint(documents, url_prefix='/document')
 

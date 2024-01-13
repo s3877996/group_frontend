@@ -48,6 +48,7 @@ class User(db.Model):
     user_password = db.Column(db.String(255), nullable=False)
     user_email = db.Column(db.String(255), unique=True, nullable=False)
     phone = db.Column(db.String(255), nullable=True)
+    user_role = db.Column(db.String(50), nullable=False, default='user')  # 'user' or 'admin'
     stripe_id = db.Column(db.String(255), nullable=True)
     active = db.Column(db.Boolean, default=True, nullable=False)
     documents = db.relationship('Document', backref='user', lazy=True)
@@ -67,7 +68,7 @@ class User(db.Model):
         db.session.commit()
 
     @classmethod
-    def create(cls, username, user_email, user_password, package_id=1):
+    def create(cls, username, user_email, user_password, user_role='user', package_id=1):
         user = cls.query.filter_by(user_email=user_email).first()
         if user:
             return False  # Indicate that the user already exists
@@ -77,6 +78,7 @@ class User(db.Model):
             username=username,
             user_email=user_email,
             user_password=hashed_password,
+            user_role=user_role,
             # package_id=package_id  # Set package_id explicitly
         )
         db.session.add(new_user)
@@ -86,10 +88,12 @@ class User(db.Model):
     @classmethod
     def get_all(cls):
         return cls.query.all()
+
     @classmethod
-    def update_stripe(cls,id,stripe_id):
-        cls.query.filter(cls.user_id==id).update({'stripe_id':stripe_id})
+    def update_stripe(cls, id, stripe_id):
+        cls.query.filter(cls.user_id == id).update({'stripe_id': stripe_id})
         db.session.commit()
+
     @classmethod
     def get_by_id(cls, user_id):
         return cls.query.join(Package).filter(cls.user_id == user_id).first()
@@ -98,25 +102,46 @@ class User(db.Model):
     def get_by_email(cls, user_email):
         return cls.query.filter_by(user_email=user_email).first()
 
+    # @classmethod
+    # def update(cls, id, username=None, user_password=None, stripe_id=None, fullname=None, phone=None):
+    #     user = cls.query.filter(cls.user_id == id).first()
+    #     if username:
+    #         user.username = username
+    #     if stripe_id:
+    #         user.stripe_id = stripe_id
+    #     if fullname:
+    #         user.fullname = fullname
+    #     if phone:
+    #         user.phone = phone
+    #     if user_password:
+    #         # print(f"Before Update - Hashed Password: {self.user_password}")
+    #         user.password = generate_password_hash(user_password)
+    #         # print(f"After Update - Hashed Password: {self.user_password}")
+    #     db.session.merge(user)
+    #     db.session.flush()
+    #     db.session.commit()
+    #     return {"id": user.user_id}
+
     @classmethod
-    def update(cls,id, username=None, user_password=None, stripe_id=None,fullname=None,phone=None):
-        user = cls.query.filter(cls.user_id==id).first()
-        if username:
-            user.username = username
-        if stripe_id:
-            user.stripe_id = stripe_id
-        if fullname:
-            user.fullname = fullname
-        if phone:
-            user.phone = phone
-        if user_password:
-            # print(f"Before Update - Hashed Password: {self.user_password}")
-            user.password = generate_password_hash(user_password)
-            # print(f"After Update - Hashed Password: {self.user_password}")
-        db.session.merge(user)
-        db.session.flush()
-        db.session.commit()
-        return {"id":user.user_id}
+    def update(cls, user_id, username=None, user_password=None, stripe_id=None, user_fullname=None, phone=None):
+        user = cls.query.filter_by(user_id=user_id).first()
+
+        if user:
+            if username:
+                user.username = username
+            if stripe_id:
+                user.stripe_id = stripe_id
+            if user_fullname:
+                user.user_fullname = user_fullname  # Updated argument name here
+            if phone:
+                user.phone = phone
+            if user_password:
+                user.user_password = generate_password_hash(user_password)
+
+            db.session.commit()
+            return {"id": user.user_id}
+        else:
+            return {"message": "User not found"}, 404
 
     def set_password(self, password):
         self.user_password = generate_password_hash(password)

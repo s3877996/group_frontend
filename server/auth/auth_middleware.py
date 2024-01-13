@@ -3,7 +3,6 @@ import jwt
 from flask import request, current_app, jsonify
 from server.database.models import User
 
-
 def token_required(required_role=None):
     def decorator(f):
         @wraps(f)
@@ -56,11 +55,7 @@ def token_required(required_role=None):
 
     return decorator
 
-# from functools import wraps
-# import jwt
-# from flask import request, abort, current_app, jsonify
-# from server.database.models import User
-#
+
 # def token_required(f):
 #     @wraps(f)
 #     def decorated(*args, **kwargs):
@@ -83,13 +78,6 @@ def token_required(required_role=None):
 #                     "data": None,
 #                     "error": "Unauthorized"
 #                 }), 401
-#
-#             if not current_user.active:
-#                 return jsonify({
-#                     "message": "User is inactive!",
-#                     "data": None,
-#                     "error": "Forbidden"
-#                 }), 403
 #
 #         except jwt.ExpiredSignatureError:
 #             return jsonify({

@@ -1,56 +1,132 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import axios from 'axios';
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import CorrectedFileRender from './CorrectedFileRender';
 
 const FileRender = () => {
     const [wordFile, setWordFile] = useState(null);
-    const [uploadedFilePath, setUploadedFilePath] = useState(null);
-    //const [fileType, setFileType] = useState('');
-    const [docxHtmlContent, setDocxHtmlContent] = useState('');
-
+    const [originalFileContent, setOriginalFileContent] = useState('');
+    const [correctedFileName, setCorrectedFileName] = useState('');
+    const [correctedFileContent, setCorrectedFileContent] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
 
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
-        setWordFile(file);
+        if (file) {
+            setWordFile(file);
+            setIsLoading(true); // Start loading
 
-        const authToken = localStorage.getItem('token');
+            const authToken = localStorage.getItem('token');
 
-        //Create FormData and append the file
-        const formData = new FormData();
-        formData.append('file', file);
+            //Create FormData and append the file
+            const formData = new FormData();
+            formData.append('file', file);
 
-        //upload file to the backend
-        try {
-            const response = await axios.post('http://127.0.0.1:5000/document/upload',formData, {
-                headers: {
-                    'Authorization': `Bearer ${authToken}`  // Include the auth token in the request header
-                },
-            });
+            //Upload file to the backend and process it
+            try {
+                const response = await axios.post('http://127.0.0.1:5000/document/upload',formData, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`  // Include the auth token in the request header
+                    },
+                    onUploadProgress: (progressEvent) => {
+                        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                        setProgress(percentCompleted);
+                    }
+                });
 
-            console.log(response.data);
+                console.log(response.data);
+                setOriginalFileContent(response.data.original_content);
+                setCorrectedFileName(response.data.corrected_file_name);
+                setCorrectedFileContent(response.data.corrected_content)
+                //setIsLoading(false);
 
-        } catch (error) {
-            if (error.response) {
-                console.error('Error response:', error.response.data);
-                console.error('Error status:', error.response.status);
-                console.error('Error headers:', error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                console.error('Error request:', error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.error('Error:', error.message);
+                // // Display a success toast, with a title
+                // toast.success("Upload successfully!", {
+                //     duration: 3000,
+                //     // Define when the toast shows up
+                //     position: 'top-center',
+                // });
+
+            } catch (error) {
+                if (error.response) {
+                    console.error('Error response:', error.response.data);
+                    console.error('Error status:', error.response.status);
+                    console.error('Error headers:', error.response.headers);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    console.error('Error request:', error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.error('Error:', error.message);
+                }
+                console.error('Error config:', error.config);
+                console.log('Error uploading file:', error);
+                setIsLoading(false); // Stop loading on error
             }
-            console.error('Error config:', error.config);
-            console.log('Error uploading file:', error);
+
+            setIsLoading(false); // Stop loading when done
         }
     };
 
-    const renderDocumentPreview = () => {
-        // if (!uploadedFilePath) return null;
-        // return <iframe src={`https://docs.google.com/gview?url=${uploadedFilePath}&embedded=true`} style={{ width: '100%', height: '500px' }} />;   
-        
+    // useEffect(() => {
+    //     let interval;
+    //     if (isLoading) {
+    //         interval = setInterval(() => {
+    //             setProgress(oldProgress => {
+    //                 if (oldProgress === 100) {
+    //                     clearInterval(interval);
+    //                     setIsLoading(false);  // Stop loading when progress reaches 100%
+    //                     return 100;
+    //                 }
+    //                 const diff = Math.random() * 10;
+    //                 return Math.min(oldProgress + diff, 100);
+    //             });
+    //         }, 500);
+    //     } else {
+    //         setProgress(0);
+    //     }
 
+    //     return () => {
+    //         clearInterval(interval);
+    //     };
+    // }, [isLoading]);
+
+    const renderDocumentPreview = () => {
+        if(!originalFileContent) return null;
+
+        return (
+            <div className="mx-4 p-4 bg-white shadow rounded-lg overflow-auto max-h-[60vh]">
+                <h1 className="text-2xl font-semibold text-gray-700 mb-4">Uploaded File Content</h1>
+                <div className="text-container mb-4 p-4 border border-gray-300 rounded-lg bg-gray-50 overflow-y-auto max-h-[80vh]" 
+                    style={{ whiteSpace: "pre-wrap", textAlign: "left" }}>
+                    <div className="text-gray-800"> 
+                        {originalFileContent}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    const renderLoadingIndicator = () => {
+        return isLoading && (
+            <div className="mx-4 relative pt-1">
+                <div className="flex mb-2 items-center justify-between">
+                    <div>
+                        <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200">
+                            Your file is being uploaded to our server and processed, please wait...
+                        </span>
+                    </div>
+                    <div className="text-right">
+                        <span className="text-xs font-semibold inline-block text-blue-600">
+                            {`${Math.round(progress)}%`}
+                        </span>
+                    </div>
+                </div>
+                <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+                    <div style={{ width: `${progress}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+                </div>
+            </div>
+        );
     };
     
     return (
@@ -89,15 +165,25 @@ const FileRender = () => {
                     </div>
                 </div>
             )}
+
+            {renderLoadingIndicator()}
     
             {/* After receiving file */}
             {wordFile && (
                 <div className="flex items-stretch justify-center h-screen">
-                    <div className="self-center">
+                    <div className="self-center w-full">
                         {renderDocumentPreview()}
                     </div>
                 </div>
                 
+            )}
+
+            {/* Render CorrectedFileRender if corrected file name is available */}
+            {correctedFileName && (
+                <CorrectedFileRender 
+                    correctedFileName={correctedFileName} 
+                    correctedFileContent={correctedFileContent} 
+                />
             )}
         </div>
     );

@@ -52,7 +52,7 @@ def upload(current_user):
             # Extract the corrected file name for database storage or response
             corrected_file_name = os.path.basename(corrected_file_path)
 
-            uploaded_file_url = request.url_root + 'upload-files/' + filename
+            original_file_url = request.url_root + 'upload-files/' + filename
             corrected_file_url = request.url_root + 'download-files/' + corrected_file_name
 
              # Create and save the document metadata in the database
@@ -63,7 +63,7 @@ def upload(current_user):
                 corrected_content=corrected_content,  # This will be updated after correction
                 start_time=datetime.now(),
                 adjusted_time=None,
-                file_path=uploaded_file_url
+                file_path=original_file_url
             )
             db.session.add(new_document)
             db.session.commit()
@@ -82,10 +82,15 @@ def upload(current_user):
         except Exception as e:
             db.session.rollback()
             return jsonify(error=f"An error occurred while saving the file: {str(e)}"), 500
-        return jsonify(success="File successfully uploaded", 
-                       document_id=new_document.document_id, 
-                       file_path=uploaded_file_url, 
-                       corrected_file_path=corrected_file_url),200
+        return jsonify(success = "File successfully uploaded", 
+                       document_id = new_document.document_id,
+                       corrected_document_id = corrected_document.corrected_document_id,
+                       original_content = original_content,
+                       corrected_content = corrected_content,
+                       original_file_path = original_file_url, 
+                       corrected_file_path = corrected_file_url,
+                       original_file_name = filename,
+                       corrected_file_name=corrected_file_name),200
     else:
         return jsonify(error="File type not allowed")
     
@@ -121,9 +126,3 @@ def get_document_of_user_by_id(user_id, document_id):
 @documents.route('/user_documents/<int:user_id>/get_document', methods=['GET'])
 def get_document_of_user_by_name(user_id, document_name):
     return get_document_of_user_by_name_service(user_id,document_name)
-
-# The application has lost the database connection:
-# ⁃ If the connection was idle it may have been forcibly disconnected.
-# ⁃ The application server or database server may have been restarted.
-# ⁃ The user session may have timed out.
-# Do you want to continue and establish a new session
