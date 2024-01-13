@@ -19,7 +19,7 @@ users_schema = UserSchema(many=True)
 
 # Manage subscriptions
 # Add package
-def add_subscription_service():
+def add_package_service():
     data = request.json
 
     # Get data of new subscription
