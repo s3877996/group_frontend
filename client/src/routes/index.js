@@ -5,6 +5,9 @@ import LoginPage from "../pages/LoginPage";
 import HomePage from "../pages/HomePage";
 import LandingPage from "../pages/LandingPage";
 import AdminPage from "../pages/AdminPage";
+import AdminPackagePage from "../pages/AdminPackagePage";
+import AdminUserPage from "../pages/AdminUserPage";
+import AdminPackageModal from "../pages/AdminPackageModal";
 import RegisterPage from "../pages/RegisterPage";
 import ProfilePage from "../pages/ProfilePage";
 import UserProfilePage from "../pages/UserProfilePage";
@@ -29,8 +32,16 @@ const Routes = () => {
       element:<SubscriptionPage/>
     },
     {
-      path:'/admin',
+      path:'/admin/dashboard',
       element:<AdminPage/>
+    },
+    {
+      path:'/admin/users',
+      element:<AdminUserPage/>
+    },
+    {
+      path:'/admin/packages',
+      element:<AdminPackagePage/>
     },
     {
       path: "/login",
@@ -91,11 +102,32 @@ const Routes = () => {
     }
   ];
 
+  // Define public routes accessible to all users
+  const routesForAdminAuthenticatedOnly = [
+    {
+      path:'/admin/dashboard',
+      element:<AdminPage/>
+    },
+    {
+      path:'/admin/users',
+      element:<AdminUserPage/>
+    },
+    {
+      path:'/admin/packages',
+      element:<AdminPackagePage/>
+    },
+    {
+      path:'/admin/packages/edit/:packageId',
+      element:<AdminPackageModal/>
+    },
+  ];
+
   // Combine and conditionally include routes based on authentication status
   const router = createBrowserRouter([
     ...routesForPublic,
     ...(!token ? routesForNotAuthenticatedOnly : []),
     ...routesForAuthenticatedOnly,
+    ...routesForAdminAuthenticatedOnly
   ]);
 
   // Provide the router configuration using RouterProvider

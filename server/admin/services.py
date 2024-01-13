@@ -19,7 +19,7 @@ users_schema = UserSchema(many=True)
 
 # Manage subscriptions
 # Add package
-def add_subscription_service():
+def add_package_service():
     data = request.json
 
     # Get data of new subscription
@@ -71,7 +71,7 @@ def add_subscription_service():
 # Get all packages
 def get_all_packages_service():
     try:
-        packages = Package.query.all()
+        packages = Package.query.order_by(Package.id).all()
         if packages:
             return make_response(
                 packages_schema.jsonify(packages),
@@ -162,6 +162,7 @@ def update_package_by_id_service(id):
         limited_docs = data['limited_docs']
         package_price = data['package_price']
         package_description = data['package_description']
+        thumbnail = data['thumbnail']
 
         if package_name and package_period and limited_docs and package_price and package_description:
             package = Package.query.get(id)
@@ -188,6 +189,9 @@ def update_package_by_id_service(id):
                 package.limited_docs = limited_docs
                 package.package_price = package_price
                 package.package_description = package_description
+
+                if thumbnail:
+                    package.thumbnail = thumbnail
 
                 # Commit changes
                 db.session.commit()
@@ -243,11 +247,33 @@ def delete_package_by_id_service(id):
 # Get all users
 def get_all_users_service():
     try:
-        users = User.query.all()
-        if users:
-            return make_response(
-                users_schema.jsonify(users),
-                200
+        packages = Package.query.all()
+
+        if packages:
+            users_data = []
+            for package in packages:
+                package_subscriptions = Subscription.query.filter(Subscription.package_id == package.id).all()
+                for sub in package_subscriptions:
+                    user = User.query.filter(User.user_id == sub.user_id, User.user_role != 'admin').first()
+                    if user:
+                        # print(user.username)
+                        user_subscription = {
+                            "user_id": user.user_id,
+                            "username": user.username,
+                            "user_email": user.user_email,
+                            "user_joined_date": user.user_joined_date,
+                            "user_active": user.active,
+                            "package_name": package.package_name,
+                            "start_time": sub.start_time, 
+                        }
+
+                        users_data.append(user_subscription)
+
+            return jsonify(
+                {
+                    "message": "Successfully finds all users",
+                    "data": users_data
+                }
             )
         else:
             return make_response(
@@ -269,8 +295,28 @@ def get_user_by_id_service(id):
         user = User.query.get(user_id=id)
 
         if user:
-            return make_response(
-                user_schema.jsonify(user), 
+            user_data = []
+            user_subscriptions = Subscription.query.filter(Subscription.user_id == user.user_id).all()
+            for sub in user_subscriptions:
+                user_package = Package.query.filter(Package.id == sub.package_id).first()
+                user_subscription = {
+                    "user_id": user.user_id,
+                    "username": user.username,
+                    "user_email": user.user_email,
+                    "user_joined_date": user.user_joined_date,
+                    "user_active": user.active,
+                    "package_name": user_package.package_name,
+                    "package_id": user_package.id,
+                    "start_time": sub.start_time, 
+                }
+
+                user_data.append(user_subscription)
+
+            return jsonify(
+                {
+                    "message": "Successfully find user by id: " + id,
+                    "data": user_data
+                },
                 200
             )
         else:
@@ -295,9 +341,29 @@ def get_users_by_name_service(name):
         if data:
             users = User.query.join(data).filter(func.lower(User.username).like('%' + data.lower() + '%')).all()
             if users:
-                return make_response(
-                    users_schema.jsonify(users),
-                    200
+                users_data = []
+                for user in users:
+                    user_subscriptions = Subscription.query.filter(Subscription.user_id == user.user_id).all()
+                    for sub in user_subscriptions:
+                        user_package = Package.query.filter(Package.id == sub.package_id).first()
+                        user_subscription = {
+                            "user_id": user.user_id,
+                            "username": user.username,
+                            "user_email": user.user_email,
+                            "user_joined_date": user.user_joined_date,
+                            "user_active": user.active,
+                            "package_name": user_package.package_name,
+                            "package_id": user_package.id,
+                            "start_time": sub.start_time, 
+                        }
+
+                        users_data.append(user_subscription)
+
+                return jsonify(
+                    {
+                        "message": "Successfully finds all users",
+                        "data": users_data
+                    }
                 )
             else:
                 return make_response(
@@ -337,6 +403,7 @@ def get_users_by_package_id_service(package_id):
 
                 print(users)
                 user_dict = {
+                    "user_id": user.user_id,
                     "username": user.username,
                     "user_email": user.user_email,
                     "user_joined_date": user.user_joined_date,
@@ -350,8 +417,7 @@ def get_users_by_package_id_service(package_id):
                     {
                         "message": "Successfully find users by package id: " + str(package_id),
                         "data": users_data
-                    },
-                    200
+                    }
                 )
         else:
             return jsonify(
@@ -388,6 +454,7 @@ def get_users_by_package_name_service():
                 package = Package.query.filter(Package.id == subscription.package_id).first()
 
                 user_dict = {
+                    "user_id": user.user_id,
                     "username": user.username,
                     "user_email": user.user_email,
                     "user_joined_date": user.user_joined_date,
@@ -442,6 +509,54 @@ def get_subscriptions_count_service():
                 })
             
             return jsonify(result)
+        
+        else:
+            return jsonify(
+                {"message": "No packages found for subscription count"}, 
+                404
+            )
+        
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return make_response(
+            {"message": "Unable to get subscription count"},
+            400
+        )
+
+# Get total revenue
+def get_subscriptions_revenue_service():
+    try:
+        # get all package name, 
+        # then checking the number of subscriptions 
+        # for each package
+        packages = Package.query.order_by(Package.id).all()
+
+        result = []
+        total_revenue = 0 
+        if packages: 
+            for package in packages: 
+                subscription_count = Subscription.query\
+                                                    .filter(Subscription.package_id == package.id)\
+                                                    .count()
+                # print(subscription_count)
+
+                revenue = subscription_count * package.package_price
+
+                result.append({
+                    "package_id": package.id,
+                    "package_name": package.package_name,
+                    "subscription_revenue": revenue
+                })
+
+                total_revenue += revenue
+            
+            return jsonify(
+                {
+                    "data": result,
+                    "total": total_revenue
+                }
+            )
         
         else:
             return jsonify(

@@ -41,7 +41,7 @@ const LoginPage = () => {
             if(data.data.user_role === "user" ){
                 navigate('/home'); // Change '/dashboard' to the desired route
             } else if (data.data.user_role === "admin"){
-                navigate('/admin'); // Change '/dashboard' to the desired route
+                navigate('/admin/dashboard'); // Change '/dashboard' to the desired route
             }
 
             // Additional logic to handle user information if needed
