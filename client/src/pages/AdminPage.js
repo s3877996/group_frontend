@@ -10,7 +10,7 @@ const AdminPage = ()  =>{
                 <div className="mx-auto max-w-screen-xl h-full w-full">
                     <AdminNavBar/>
 
-                    <div className="pt-48 flex flex-row items-center divide-x divide-teal-400 divide-dashed hover:divide-solid">
+                    <div className="pt-36 flex flex-row items-center divide-x divide-teal-400 divide-dashed hover:divide-solid">
                         <SubscriptionStatistics/>
                         <RevenueChart/>
                     </div>

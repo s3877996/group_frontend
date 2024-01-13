@@ -19,7 +19,7 @@ const UserTable = () => {
         <div className="mt-24 w-full min-w-max table-auto text-center">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-white-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
+                    <tr key="user_table">
                         <th scope="col" className="px-6 py-3">Username</th>
                         <th scope="col" className="px-6 py-3">Email</th>
                         <th scope="col" className="px-6 py-3">Joined Date</th>

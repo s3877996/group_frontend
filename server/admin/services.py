@@ -254,17 +254,20 @@ def get_all_users_service():
             for package in packages:
                 package_subscriptions = Subscription.query.filter(Subscription.package_id == package.id).all()
                 for sub in package_subscriptions:
-                    user = User.query.filter(User.user_id == sub.user_id).first()
-                    user_subscription = {
-                        "username": user.username,
-                        "user_email": user.user_email,
-                        "user_joined_date": user.user_joined_date,
-                        "user_active": user.active,
-                        "package_name": package.package_name,
-                        "start_time": sub.start_time, 
-                    }
+                    user = User.query.filter(User.user_id == sub.user_id, User.user_role != 'admin').first()
+                    if user:
+                        # print(user.username)
+                        user_subscription = {
+                            "user_id": user.user_id,
+                            "username": user.username,
+                            "user_email": user.user_email,
+                            "user_joined_date": user.user_joined_date,
+                            "user_active": user.active,
+                            "package_name": package.package_name,
+                            "start_time": sub.start_time, 
+                        }
 
-                    users_data.append(user_subscription)
+                        users_data.append(user_subscription)
 
             return jsonify(
                 {

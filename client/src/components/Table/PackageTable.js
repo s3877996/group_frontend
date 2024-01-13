@@ -14,7 +14,7 @@ const PackageTable = () => {
     useEffect(() => {
         api.get('/admin/get_all_packages')
             .then(response => {
-                console.log("package data:", response.data);
+                // console.log("package data:", response.data);
                 setPackageData(response.data);
             })
             .catch(err => {
@@ -26,7 +26,7 @@ const PackageTable = () => {
         <div className="mt-24 w-full min-w-max table-auto text-center">
             <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-white-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
+                    <tr key="package_table">
                         <th scope="col" className="px-6 py-3">Package Name</th>
                         <th scope="col" className="px-6 py-3">Period</th>
                         <th scope="col" className="px-6 py-3">No. Documents</th>
@@ -60,8 +60,8 @@ const PackageTable = () => {
                         </td>
                         <td className="px-6 py-4 text-wrap">
                             <button type="button" onClick={() => handleEditPackageInfo(pkg.id)}>
-                                <svg class="h-6 w-6 text-gray-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                                <svg className="h-6 w-6 text-gray-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                                 </svg>
                             </button>
                         </td>
