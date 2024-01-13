@@ -5,6 +5,7 @@ from .db import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 # User when does not subsribe new package will be deactivated
 
 # Subcription package
@@ -30,12 +31,15 @@ class Package(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
     @classmethod
     def get_all(cls):
-        return cls.query.filter(cls.package_price >0).order_by(cls.package_price).all()
+        return cls.query.filter(cls.package_price > 0).order_by(cls.package_price).all()
+
     @classmethod
     def get_by_id(cls, id):
         return cls.query.filter(cls.id == id).first()
+
 
 # User
 class User(db.Model):
@@ -162,6 +166,7 @@ class User(db.Model):
 
         return user
 
+
 # Record list of users that have use the trial package
 class History(db.Model):
     __tablename__ = 'histories'
@@ -170,10 +175,11 @@ class History(db.Model):
 
     def __repr__(self):
         return f'<History {self.user_id}>'
-    
+
     def save(self):
         db.session.add(self)
         db.session.commit()
+
 
 # Uploaded Document
 class Document(db.Model):
@@ -274,5 +280,3 @@ class Subscription(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
-
-

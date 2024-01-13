@@ -55,5 +55,10 @@ def create_app(config_file='config.py'):
     app.register_blueprint(admins)
     app.register_blueprint(documents, url_prefix='/document')
 
+    # # Print out all routes
+    # print("Registered Routes:")
+    # for rule in app.url_map.iter_rules():
+    #     print(f"{rule.endpoint}: {rule.rule}")
+
     # Run application
     return app

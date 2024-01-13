@@ -1,7 +1,3 @@
-Nhat: subscription.\
-Hien: authentication + userprofile.\
-Duong: .\
-Duy Anh: 
 # Getting Started with Create React App
 
 If you cannot run the React app, install all of these dependencies.\
