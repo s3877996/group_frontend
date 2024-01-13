@@ -70,35 +70,35 @@ def get_all_users():
 
 
 @admins.route('/admin/get_user_by_id/<int:user_id>', methods=['GET'])
-# @token_required(required_role='admin')
+@token_required(required_role='admin')
 def get_users_by_id(user_id):
     return get_user_by_id_service(user_id)
 
 
 @admins.route('/admin/get_user_by_name', methods=['GET'])
-# @token_required(required_role='admin')
+@token_required(required_role='admin')
 def get_users_by_name():
     return get_users_by_name_service()
 
 
 @admins.route('/admin/get_users_by_package_id/<int:package_id>', methods=['GET'])
-# @token_required(required_role='admin')
+@token_required(required_role='admin')
 def get_users_by_package_id(package_id):
     return get_users_by_package_id_service(package_id)
 
 
 @admins.route('/admin/get_users_by_package_name', methods=['GET'])
-# @token_required(required_role='admin')
+@token_required(required_role='admin')
 def get_users_by_package_name():
     return get_users_by_package_name_service()
 
 
 @admins.route('/admin/get_subscriptions_count', methods=['GET'])
-# @token_required(required_role='admin')
+@token_required(required_role='admin')
 def get_subscriptions_count():
     return get_subscriptions_count_service()
 
 @admins.route('/admin/get_revenue', methods=['GET'])
-# @token_required(required_role='admin')
+@token_required(required_role='admin')
 def get_subscriptions_revenue():
     return get_subscriptions_revenue_service()
