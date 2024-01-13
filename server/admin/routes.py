@@ -89,16 +89,16 @@ def get_users_by_package_id(package_id):
 
 @admins.route('/admin/get_users_by_package_name', methods=['GET'])
 @token_required(required_role='admin')
-def get_users_by_package_name():
-    return get_users_by_package_name_service()
+def get_users_by_package_name(current_user):
+    return get_users_by_package_name_service(current_user)
 
 
 @admins.route('/admin/get_subscriptions_count', methods=['GET'])
 @token_required(required_role='admin')
-def get_subscriptions_count():
-    return get_subscriptions_count_service()
+def get_subscriptions_count(current_user):
+    return get_subscriptions_count_service(current_user)
 
 @admins.route('/admin/get_revenue', methods=['GET'])
 @token_required(required_role='admin')
-def get_subscriptions_revenue():
-    return get_subscriptions_revenue_service()
+def get_subscriptions_revenue(current_user):
+    return get_subscriptions_revenue_service(current_user)
