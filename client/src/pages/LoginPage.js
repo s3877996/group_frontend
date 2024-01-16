@@ -137,20 +137,14 @@ const LoginPage = () => {
                         <p className="text-center">OR</p>
                         <hr className="border-gray-400"/>
                     </div>
-
-                    {/*Login with Google button*/}
-                    <button className="bg-white border-2 py-2 w-full rounded-xl mt-5 flex justify-center items-center hover:bg-gray-100 hover:scale-105 duration-300">
-                        <FcGoogle className="mr-3" size={22}/>
-                        Login with Google
+                    <p className="text-decoration-line: underline">Don't have an account?</p>
+                    {/*Register button*/}
+                    <button className="bg-white border-2 py-2 w-full rounded-xl mt-5 flex justify-center items-center hover:bg-gray-100 hover:scale-105 duration-300 " onClick={() => navigate('/register')}>
+                        Register for an account
                     </button>
-                    {/*Login with Google button*/}
+                    {/*Register button*/}
 
-                    <div className="mt-5 text-xs flex justify-between items-center">
-                        <p className="text-decoration-line: underline">Don't have an account?</p>
-                        <button className="py-2 px-5 text-white bg-green-600 font-bold border rounded-xl hover:scale-105 duration-300" onClick={() => navigate('/register')}>Register</button>
-                    </div>
 
-                    <br />
 
 
                 </div>

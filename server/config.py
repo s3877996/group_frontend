@@ -10,3 +10,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 STRIPE_KEY: str = os.environ.get('STRIPE_KEY')
 WEBHOOK_STRIPE_KEY: str = os.getenv("WEBHOOK_STRIPE_KEY") or'whsec_16aa8c69c742806e98fba8414cab4eb1f449291d5bf6f8b37278bb7eb501b996'
 FE_DOMAIN= os.getenv("FE_DOMAIN") or 'http://localhost:3000/'
+
+# GOOGLE_CLIENT_ID= '337958897465-tkodqvgikngb0u1se43vovm30jkl4b1r.apps.googleusercontent.com'
+# GOOGLE_CLIENT_SECRET= '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'
+# GOOGLE_REDIRECT_URI= 'http://localhost:5000/api/users/login/google-login'

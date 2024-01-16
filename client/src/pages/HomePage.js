@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "../components/Navigation/Navbar"
 import FileRender from "../components/FileRender/FileRender";
+import CorrectedFileRender from "../components/FileRender/CorrectedFileRender";
 
 const HomePage = ()  =>{
 

@@ -5,6 +5,18 @@ from .auth_middleware import token_required
 
 auth = Blueprint('auth', __name__)
 
+# oauth = OAuth()
+# google = oauth.remote_app(
+#     'google',
+#     base_url='https://www.googleapis.com/oauth2/v1/',
+#     authorize_url='https://accounts.google.com/o/oauth2/auth',
+#     request_token_url=None,
+#     request_token_params={'scope': 'email'},
+#     access_token_url='https://accounts.google.com/o/oauth2/token',
+#     access_token_method='POST',
+#     consumer_key='337958897465-tkodqvgikngb0u1se43vovm30jkl4b1r.apps.googleusercontent.com',
+#     consumer_secret='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'
+# )
 
 @auth.route("/register", methods=["POST"])
 def register_user():

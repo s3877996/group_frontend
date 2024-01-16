@@ -14,7 +14,7 @@ const HomeFooter = () => {
                 <div className="max-w-[1000px] w-full mx-auto">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
                         <FooterItem
-                            title="Get Grammarly"
+                            title="Get ProsePilot"
                             items={["Windows", "Desktop", "Mac"]}></FooterItem>
                         <FooterItem
                             title="Learn More"
@@ -45,11 +45,11 @@ const HomeFooter = () => {
                             <FooterItem
                                 title="Contact"
                                 items={[
-                                    "Email: grammarly@gmail.com",
+                                    "Email: ProsePilot@gmail.com",
                                     "Phone number: 0988 123 456",
                                 ]}></FooterItem>
                             <p className="mt-4 font-semibold">
-                                Grammarly Social Contacts
+                                ProsePilot Social Contacts
                             </p>
                             <ul className="flex items-center mt-4 gap-x-4 md:gap-x-8">
                                 <li>
