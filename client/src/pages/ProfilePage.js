@@ -5,6 +5,7 @@ import api, { setAuthToken } from '../api.js';
 import PaymentHistoryTable from './PaymentHistoryTable';
 import { useNavigate } from 'react-router-dom';// Import useHistory from react-router-dom
 import Navbar from "../components/Navigation/Navbar"
+import avatar from "../image/avatar.png"
 import SubscriptionModal from './SubscriptionModal';
 
 
@@ -117,7 +118,7 @@ return (
                     <h2 className="text-2xl font-bold mb-4 text-center">User Profile</h2>
                     <div className="flex justify-center items-center mb-4">
                         <img
-                            src="https://placekitten.com/150/150"
+                            src={avatar}
                             alt="Profile"
                             className="rounded-full w-20 h-20"
                         />

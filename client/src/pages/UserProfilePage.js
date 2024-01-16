@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import api from '../api'
+import avatar from "../image/avatar.png"
 import { useNavigate } from 'react-router-dom';
 import Navbar from "../components/Navigation/Navbar";
+import logo from "../image/logo1.png";
 const UserProfilePage = ({ token }) => {
 
     const [userData, setUserData] = useState(null);
@@ -60,7 +62,7 @@ const UserProfilePage = ({ token }) => {
                         <div className="flex-grow mx-auto max-w-md lg:max-w-3xl  bg-white rounded-xl shadow-md overflow-hidden "> {/* Updated: Adjusted max-w classes */}
                     <div className="md:flex">
                         <div className="md:flex-shrink-0 md:text-center">
-                            <img className="h-48 w-full object-cover md:w-48 mx-auto sm:rounded-none md:rounded-full" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80" alt="Profile Picture" />
+                            <img className="h-48 w-full object-cover md:w-48 mx-auto sm:rounded-none md:rounded-full" src={avatar} alt="Profile Picture" />
                         </div>
                                     <div className="p-8 w-full md:w-2/3 lg:w-1/2 xl:w-2/3"> {/* Updated: Set width to full on small screens, and adjust on larger screens */}
                             <div className="uppercase tracking-wide text-sm text-green-500 font-semibold">Account</div>
