@@ -37,15 +37,7 @@ const FileRender = () => {
                 console.log(response.data);
                 setOriginalFileContent(response.data.original_content);
                 setCorrectedFileName(response.data.corrected_file_name);
-                setCorrectedFileContent(response.data.corrected_content)
-                //setIsLoading(false);
-
-                // // Display a success toast, with a title
-                // toast.success("Upload successfully!", {
-                //     duration: 3000,
-                //     // Define when the toast shows up
-                //     position: 'top-center',
-                // });
+                setCorrectedFileContent(response.data.corrected_content);
 
             } catch (error) {
                 if (error.response) {
@@ -68,36 +60,13 @@ const FileRender = () => {
         }
     };
 
-    // useEffect(() => {
-    //     let interval;
-    //     if (isLoading) {
-    //         interval = setInterval(() => {
-    //             setProgress(oldProgress => {
-    //                 if (oldProgress === 100) {
-    //                     clearInterval(interval);
-    //                     setIsLoading(false);  // Stop loading when progress reaches 100%
-    //                     return 100;
-    //                 }
-    //                 const diff = Math.random() * 10;
-    //                 return Math.min(oldProgress + diff, 100);
-    //             });
-    //         }, 500);
-    //     } else {
-    //         setProgress(0);
-    //     }
-
-    //     return () => {
-    //         clearInterval(interval);
-    //     };
-    // }, [isLoading]);
-
     const renderDocumentPreview = () => {
         if(!originalFileContent) return null;
 
         return (
-            <div className="mx-4 p-4 bg-white shadow rounded-lg overflow-auto max-h-[60vh]">
-                <h1 className="text-2xl font-semibold text-gray-700 mb-4">Uploaded File Content</h1>
-                <div className="text-container mb-4 p-4 border border-gray-300 rounded-lg bg-gray-50 overflow-y-auto max-h-[80vh]" 
+            <div className="px-4 pt-40 bg-white shadow rounded-lg overflow-auto max-h-[120vh]">
+                <h1 className="text-2xl font-semibold text-gray-700 mb-4 pb-2">Uploaded File Content</h1>
+                <div className="text-container mb-4 p-4 border border-gray-300 rounded-lg bg-gray-50" 
                     style={{ whiteSpace: "pre-wrap", textAlign: "left" }}>
                     <div className="text-gray-800"> 
                         {originalFileContent}
@@ -130,61 +99,76 @@ const FileRender = () => {
     };
     
     return (
-        <div className="w-full py-36 space-y-5 border-2 border-gray-300 border-dashed">
-            {/* Initial view */}
-            {!wordFile && (
-                <div className="flex items-stretch justify-center h-screen">
-                    <div className="self-center w-2/3">
-                        <label
-                            htmlFor="dropzone-file"
-                            className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-                        >
-                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg
-                                    className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 20 16"
-                                >
-                                    <path
-                                        stroke="currentColor"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+        <div className="flex flex-col">
+            <main className="flex-grow bg-white-700 overflow-auto">
+                <div className="mx-auto max-w-screen-xl h-full w-full">
+                    <div className="flex min-h-screen justify-center">
+                        {/*Insert file in the left-hand side container*/}
+                        <div className="sm:w-1/2 bg-white-500 text-white flex items-center justify-center">
+                            {!wordFile && (
+                                <div className="flex items-stretch justify-center h-screen">
+                                    <div className="self-center w-2/3">
+                                        <label
+                                            htmlFor="dropzone-file"
+                                            className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                                        >
+                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                                <svg
+                                                    className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                                                    aria-hidden="true"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none"
+                                                    viewBox="0 0 20 16"
+                                                >
+                                                    <path
+                                                        stroke="currentColor"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                                                    />
+                                                </svg>
+                                                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                                    <span className="font-semibold">Click to upload</span> or drag and drop
+                                                </p>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">DOCX or DOC files</p>
+                                            </div>
+                                            <input id="dropzone-file" type="file" className="hidden" onChange={handleFileChange} />
+                                        </label>
+                                    </div>
+                                </div>
+                            )}
+
+                            {renderLoadingIndicator()}
+                    
+                            {/* After receiving file */}
+                            {wordFile && (
+                                <div className="flex items-stretch justify-center h-screen">
+                                    <div className="self-center">
+                                        {renderDocumentPreview()}
+                                    </div>
+                                </div>
+                                
+                            )}   
+                        </div>
+
+                        <div className="sm:w-1/2 bg-white flex items-center justify-center">
+                            {/* Render CorrectedFileRender if corrected file name is available */}
+                            {correctedFileName && (
+                                <div className="flex items-stretch justify-center h-screen">
+                                    <div className="self-center">
+                                    <CorrectedFileRender 
+                                        correctedFileName={correctedFileName} 
+                                        correctedFileContent={correctedFileContent} 
                                     />
-                                </svg>
-                                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                                    <span className="font-semibold">Click to upload</span> or drag and drop
-                                </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">DOCX or DOC files</p>
-                            </div>
-                            <input id="dropzone-file" type="file" className="hidden" onChange={handleFileChange} />
-                        </label>
+                                    </div>
+                                </div>
+                                
+                            )}
+                        </div>
                     </div>
                 </div>
-            )}
-
-            {renderLoadingIndicator()}
-    
-            {/* After receiving file */}
-            {wordFile && (
-                <div className="flex items-stretch justify-center h-screen">
-                    <div className="self-center w-full">
-                        {renderDocumentPreview()}
-                    </div>
-                </div>
-                
-            )}
-
-            {/* Render CorrectedFileRender if corrected file name is available */}
-            {correctedFileName && (
-                <CorrectedFileRender 
-                    correctedFileName={correctedFileName} 
-                    correctedFileContent={correctedFileContent} 
-                />
-            )}
+            </main>
         </div>
     );
 };
