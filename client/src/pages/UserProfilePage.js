@@ -4,7 +4,7 @@ import api from '../api'
 import avatar from "../image/avatar.png"
 import { useNavigate } from 'react-router-dom';
 import Navbar from "../components/Navigation/Navbar";
-import logo from "../image/logo1.png";
+// import logo from "../image/logo1.png";
 const UserProfilePage = ({ token }) => {
 
     const [userData, setUserData] = useState(null);

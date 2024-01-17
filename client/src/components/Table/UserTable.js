@@ -30,7 +30,7 @@ const UserTable = () => {
                 </thead>
                 <tbody>
                 {userData.map((user) => (
-                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={user.user_id}>
+                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={user.subscription_id}>
                         <td className="px-6 py-4">
                             {user.username}
                         </td>

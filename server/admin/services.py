@@ -72,7 +72,7 @@ def add_package_service():
 
 
 # Get all packages
-def get_all_packages_service():
+def get_all_packages_service(current_user):
     try:
         packages = Package.query.order_by(Package.id).all()
         if packages:
@@ -253,7 +253,7 @@ def delete_package_by_id_service(id):
 ################################
 # Manage users
 # Get all users
-def get_all_users_service():
+def get_all_users_service(current_user):
     try:
         packages = Package.query.all()
 
@@ -266,13 +266,13 @@ def get_all_users_service():
                     if user:
                         # print(user.username)
                         user_subscription = {
-                            "user_id": user.user_id,
                             "username": user.username,
                             "user_email": user.user_email,
                             "user_joined_date": user.user_joined_date,
                             "user_active": user.active,
                             "package_name": package.package_name,
                             "start_time": sub.start_time,
+                            "subscription_id": sub.subscription_id
                         }
 
                         users_data.append(user_subscription)
