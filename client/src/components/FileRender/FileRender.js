@@ -1,5 +1,4 @@
-import React, {useState, useEffect} from "react";
-import { useNavigate } from "react-router-dom";
+import React, {useState} from "react";
 import axios from 'axios';
 import CorrectedFileRender from './CorrectedFileRender';
 
@@ -10,8 +9,6 @@ const FileRender = () => {
     const [correctedFileContent, setCorrectedFileContent] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [progress, setProgress] = useState(0);
-
-    const navigate = useNavigate();
 
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
@@ -74,7 +71,7 @@ const FileRender = () => {
                     {/* Reload page button */}
                     <button type="button" 
                         onClick={() => window.location.reload(false)}
-                        className="w-10 h-10 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        className="w-10 h-10 bg-blue-600 hover:bg-blue-700 border border-transparent rounded-md p-2.5 inline-flex items-center bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
                         </svg>
