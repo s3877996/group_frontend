@@ -104,10 +104,11 @@ const FileRender = () => {
                 <div className="mx-auto max-w-screen-xl h-full w-full">
                     <div className="flex min-h-screen justify-center">
                         {/*Insert file in the left-hand side container*/}
-                        <div className="sm:w-1/2 bg-white-500 text-white flex items-center justify-center">
+                        <div className="sm:w-1/2 bg-white-500 text-white flex items-center justify-center border ">
                             {!wordFile && (
-                                <div className="flex items-stretch justify-center h-screen">
-                                    <div className="self-center w-2/3">
+                                <div className="w-full h-full px-4 pt-24 space-y-24 bg-white shadow rounded-lg overflow-auto max-h-[120vh]">
+                                    <h1 className="text-2xl font-semibold text-gray-700 mb-4 pb-2">Uploaded File Content</h1>
+                                    <div className="h-full mx-8 align-center justify-items-center">
                                         <label
                                             htmlFor="dropzone-file"
                                             className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
@@ -154,13 +155,31 @@ const FileRender = () => {
 
                         <div className="sm:w-1/2 bg-white flex items-center justify-center">
                             {/* Render CorrectedFileRender if corrected file name is available */}
+                            {!correctedFileName && (
+                                <div className="w-full h-full px-4 pt-24 bg-white shadow rounded-lg overflow-auto max-h-[120vh]">
+                                    <div className="flex flex-row">
+                                        <h1 className="w-full max-w-4 text-2xl font-semibold text-gray-700 mb-4 pb-2">Corrected File Content</h1>
+
+                                        <div className="">
+                                            <a href={`http://127.0.0.1:5000/document/download/${correctedFileName}`} 
+                                            download 
+                                            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                                Download
+                                            </a>    
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            )}
+
+                            {/* Render CorrectedFileRender if corrected file name is available */}
                             {correctedFileName && (
                                 <div className="flex items-stretch justify-center h-screen">
                                     <div className="self-center">
-                                    <CorrectedFileRender 
-                                        correctedFileName={correctedFileName} 
-                                        correctedFileContent={correctedFileContent} 
-                                    />
+                                        <CorrectedFileRender 
+                                            correctedFileName={correctedFileName} 
+                                            correctedFileContent={correctedFileContent} 
+                                        />
                                     </div>
                                 </div>
                                 
