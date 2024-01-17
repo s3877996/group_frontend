@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import CorrectedFileRender from './CorrectedFileRender';
 
@@ -9,6 +10,8 @@ const FileRender = () => {
     const [correctedFileContent, setCorrectedFileContent] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [progress, setProgress] = useState(0);
+
+    const navigate = useNavigate();
 
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
@@ -65,7 +68,19 @@ const FileRender = () => {
 
         return (
             <div className="px-4 pt-40 bg-white shadow rounded-lg overflow-auto max-h-[120vh]">
-                <h1 className="text-2xl font-semibold text-gray-700 mb-4 pb-2">Uploaded File Content</h1>
+                <div className="flex flex-row">
+                    <h1 className="w-full max-w-4 text-2xl font-semibold text-gray-700 mb-4 pb-2">Uploaded File Content</h1>
+
+                    {/* Reload page button */}
+                    <button type="button" 
+                        onClick={() => window.location.reload(false)}
+                        className="w-10 h-10 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                    </button>
+                </div>
+
                 <div className="text-container mb-4 p-4 border border-gray-300 rounded-lg bg-gray-50" 
                     style={{ whiteSpace: "pre-wrap", textAlign: "left" }}>
                     <div className="text-gray-800"> 
@@ -78,21 +93,27 @@ const FileRender = () => {
 
     const renderLoadingIndicator = () => {
         return isLoading && (
-            <div className="mx-4 relative pt-1">
-                <div className="flex mb-2 items-center justify-between">
-                    <div>
-                        <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200">
-                            Your file is being uploaded to our server and processed, please wait...
-                        </span>
-                    </div>
-                    <div className="text-right">
-                        <span className="text-xs font-semibold inline-block text-blue-600">
-                            {`${Math.round(progress)}%`}
-                        </span>
-                    </div>
+            <div className="h-full space-y-2">
+                <div className="px-4 pt-24">
+                    <h1 className="text-2xl font-semibold text-gray-700 mb-4 pb-2">Uploaded File Content</h1>
                 </div>
-                <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
-                    <div style={{ width: `${progress}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+
+                <div className="mx-4 relative pt-1">
+                    <div className="flex mb-2 items-center justify-between">
+                        <div>
+                            <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200">
+                                Your file is being uploaded to our server and processed, please wait...
+                            </span>
+                        </div>
+                        <div className="text-right">
+                            <span className="text-xs font-semibold inline-block text-blue-600">
+                                {`${Math.round(progress)}%`}
+                            </span>
+                        </div>
+                    </div>
+                    <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+                        <div style={{ width: `${progress}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"></div>
+                    </div>
                 </div>
             </div>
         );
@@ -104,9 +125,9 @@ const FileRender = () => {
                 <div className="mx-auto max-w-screen-xl h-full w-full">
                     <div className="flex min-h-screen justify-center">
                         {/*Insert file in the left-hand side container*/}
-                        <div className="sm:w-1/2 bg-white-500 text-white flex items-center justify-center border ">
+                        <div className="sm:w-1/2 bg-white-500 text-white flex items-center justify-center border">
                             {!wordFile && (
-                                <div className="w-full h-full px-4 pt-24 space-y-24 bg-white shadow rounded-lg overflow-auto max-h-[120vh]">
+                                <div className="w-full h-full px-4 pt-24 space-y-24 bg-white shadow rounded-lg overflow-hidden max-h-[120vh]">
                                     <h1 className="text-2xl font-semibold text-gray-700 mb-4 pb-2">Uploaded File Content</h1>
                                     <div className="h-full mx-8 align-center justify-items-center">
                                         <label
@@ -153,20 +174,12 @@ const FileRender = () => {
                             )}   
                         </div>
 
-                        <div className="sm:w-1/2 bg-white flex items-center justify-center">
+                        <div className="sm:w-1/2 bg-white flex items-center justify-center border">
                             {/* Render CorrectedFileRender if corrected file name is available */}
                             {!correctedFileName && (
                                 <div className="w-full h-full px-4 pt-24 bg-white shadow rounded-lg overflow-auto max-h-[120vh]">
                                     <div className="flex flex-row">
                                         <h1 className="w-full max-w-4 text-2xl font-semibold text-gray-700 mb-4 pb-2">Corrected File Content</h1>
-
-                                        <div className="">
-                                            <a href={`http://127.0.0.1:5000/document/download/${correctedFileName}`} 
-                                            download 
-                                            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                                Download
-                                            </a>    
-                                        </div>
                                     </div>
                                 </div>
                                 
