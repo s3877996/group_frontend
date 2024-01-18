@@ -17,36 +17,36 @@ const UserTable = () => {
 
     return (
         <div className="mt-24 w-full min-w-max table-auto text-center">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-white-50 dark:bg-gray-700 dark:text-gray-400">
+            <table className="w-full text-sm text-left rtl:text-right text-lime-950">
+                <thead className="text-xs text-gray-700 uppercase text-lime-950 bg-teal-600">
                     <tr key="user_table">
-                        <th scope="col" className="px-6 py-3">Username</th>
-                        <th scope="col" className="px-6 py-3">Email</th>
-                        <th scope="col" className="px-6 py-3">Joined Date</th>
-                        <th scope="col" className="px-6 py-3">Active Status</th>
-                        <th scope="col" className="px-6 py-3">Subscribed Package</th>
-                        <th scope="col" className="px-6 py-3">Subscribed Time</th>
+                        <th scope="col" className="px-2 py-3">Username</th>
+                        <th scope="col" className="px-2 py-3">Email</th>
+                        <th scope="col" className="px-2 py-3">Joined Date</th>
+                        <th scope="col" className="px-2 py-3">Active Status</th>
+                        <th scope="col" className="px-2 py-3">Subscribed Package</th>
+                        <th scope="col" className="px-2 py-3">Subscribed Time</th>
                     </tr>
                 </thead>
                 <tbody>
                 {userData.map((user) => (
-                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700" key={user.subscription_id}>
-                        <td className="px-6 py-4">
+                    <tr className="bg-white border-b border-gray-700" key={user.subscription_id}>
+                        <td className="px-2 py-3">
                             {user.username}
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-2 py-3">
                             {user.user_email}
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-2 py-3">
                             {user.user_joined_date}
                         </td>
-                        <td className="px-6 py-4 text-center">
+                        <td className="px-2 py-3 text-center">
                             {user.user_active ? "Active" : "Deactivated"}
                         </td>
-                        <td className="px-6 py-4 text-center">
+                        <td className="px-2 py-3 text-center">
                             {user.package_name}
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-2 py-3">
                             {user.start_time}
                         </td>
                     </tr>

@@ -62,7 +62,7 @@ def upload(current_user):
                 original_content=original_content,
                 corrected_content=corrected_content,  # This will be updated after correction
                 start_time=datetime.now(),
-                adjusted_time=None,
+                adjusted_time=datetime.now(),
                 file_path=original_file_url
             )
             db.session.add(new_document)
@@ -113,16 +113,18 @@ def download_corrected_document(filename):
     
     
 # Get all documents
-@documents.route('/user_documents/<int:user_id>', methods=['GET'])
-def get_all_documents_of_user(user_id):
-    return get_all_documents_of_user_service(user_id) 
+@documents.route('/user_documents', methods=['GET'])
+@token_required(required_role='user')
+def get_all_documents_of_user(current_user):
+    return get_all_documents_of_user_service(current_user) 
 
 # Get document by id
-@documents.route('/user_documents/<int:user_id>/document/<int:document_id>', methods=['GET'])
-def get_document_of_user_by_id(user_id, document_id):
-    return get_document_of_user_by_id_service(user_id,document_id)
+@documents.route('/user_documents/document/<int:document_id>', methods=['GET'])
+@token_required(required_role='user')
+def get_document_of_user_by_id(current_user, document_id):
+    return get_document_of_user_by_id_service(current_user.user_id,document_id)
 
-# Get document by name
-@documents.route('/user_documents/<int:user_id>/get_document', methods=['GET'])
-def get_document_of_user_by_name(user_id, document_name):
-    return get_document_of_user_by_name_service(user_id,document_name)
+# # Get document by name
+# @documents.route('/user_documents/get_document', methods=['GET'])
+# def get_document_of_user_by_name(current_user, document_name):
+#     return get_document_of_user_by_name_service(current_user.user_id,document_name)
