@@ -6,7 +6,7 @@ import api from "../api";
 
 const AdminPackageModal = () => {
     const { packageId } = useParams();
-    console.log(packageId, "id");
+    console.log("id", packageId);
 
     const [isModalOpen, setModalOpen] = useState(false);
     const handleOpenModal = () => {
