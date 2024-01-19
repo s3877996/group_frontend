@@ -38,11 +38,11 @@ const PaymentHistoryTable = () => {
               <tbody>
                 {paymentData.map((payment) => (
                   <tr key={payment.id}>
-                    <td className="py-2 px-4 border-b">{payment.package_name}</td>
-                    <td className="py-2 px-4 border-b">{payment.start_time}</td>
-                    <td className="py-2 px-4 border-b">{payment.amount}</td>
-                    <td className="py-2 px-4 border-b">{payment.next_time}</td>
-                    <td className="py-2 px-4 border-b">{payment.status}</td>
+                      <td className="py-2 px-4 border-b">{payment.package_name}</td>
+                      <td className="py-2 px-4 border-b">{new Date(payment.start_time).toLocaleDateString()} {new Date(payment.start_time).toLocaleTimeString()}</td>
+                      <td className="py-2 px-4 border-b">{payment.amount}</td>
+                      <td className="py-2 px-4 border-b">{new Date(payment.next_time).toLocaleDateString()} {new Date(payment.next_time).toLocaleTimeString()}</td>
+                      <td className="py-2 px-4 border-b">{payment.status}</td>
                   </tr>
                 ))}
               </tbody>
