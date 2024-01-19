@@ -2,7 +2,7 @@ import os
 
 from flask import jsonify
 from .db import db
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -264,3 +264,41 @@ class Subscription(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+    @classmethod
+    def can_upload_document(cls, user_id):
+        # Fetch the current or most recent subscription
+        current_subscription = Subscription.query.filter_by(user_id=user_id).order_by(Subscription.start_time.desc()).first()
+
+        if current_subscription is None:
+            return False, "No active subscription"
+
+        # Calculate the end time of the subscription
+        if current_subscription.package.package_name == 'Trial Package':
+            subscription_end_time = current_subscription.start_time + timedelta(days=14)
+        else:
+            subscription_end_time = current_subscription.start_time + timedelta(days=30) # Basic, Standard, Premium
+
+        # Check if the current date is within the subscription period
+        if datetime.now() > subscription_end_time:
+            return False, "Subscription period has ended"
+
+        # Document upload limit based on package
+        doc_limit = {
+            'Trial Package': 10,
+            'Basic': 20,
+            'Standard': 30,
+            'Premium': 40
+        }.get(current_subscription.package.package_name, 10)  # Default to 10 if package not found
+
+        # Count documents uploaded during this subscription period
+        document_count = Document.query.filter(
+            Document.user_id == user_id,
+            Document.start_time >= current_subscription.start_time
+        ).count()
+
+        # Check if the limit is reached or exceeded
+        if document_count >= doc_limit:
+            return False, "Document upload limit reached"
+
+        return True, "User can upload documents"

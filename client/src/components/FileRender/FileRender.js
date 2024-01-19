@@ -9,6 +9,32 @@ const FileRender = () => {
     const [correctedFileContent, setCorrectedFileContent] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [progress, setProgress] = useState(0);
+    const [processingStatus, setProcessingStatus] = useState(0);
+    const [alertMessage, setAlertMessage] = useState('');
+
+    const checkProcessingStatus = async () => {
+        try {
+            const statusResponse = await axios.get('http://127.0.0.1:5000/document/processing-status', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            const { status, progress: processingProgress } = statusResponse.data;
+            const totalProgress = 50 + (processingProgress / 2);
+            setProgress(totalProgress);
+
+            if (status !== 'completed') {
+                setTimeout(checkProcessingStatus, 2000); // Poll every 2 seconds
+            } else {
+                setIsLoading(false); // Stop loading when processing is done
+            }
+        } catch (error) {
+            console.error('Error checking processing status:', error);
+            setIsLoading(false);
+        }
+    };
+    
 
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
@@ -29,8 +55,8 @@ const FileRender = () => {
                         'Authorization': `Bearer ${authToken}`  // Include the auth token in the request header
                     },
                     onUploadProgress: (progressEvent) => {
-                        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                        setProgress(percentCompleted);
+                        const uploadProgress = Math.round((progressEvent.loaded * 50) / progressEvent.total);
+                        setProgress(uploadProgress);
                     }
                 });
 
@@ -38,6 +64,7 @@ const FileRender = () => {
                 setOriginalFileContent(response.data.original_content);
                 setCorrectedFileName(response.data.corrected_file_name);
                 setCorrectedFileContent(response.data.corrected_content);
+                checkProcessingStatus();
 
             } catch (error) {
                 if (error.response) {
@@ -53,10 +80,16 @@ const FileRender = () => {
                 }
                 console.error('Error config:', error.config);
                 console.log('Error uploading file:', error);
-                setIsLoading(false); // Stop loading on error
-            }
+                setIsLoading(false);  // Stop loading on error
 
-            setIsLoading(false); // Stop loading when done
+                // Check if the error is related to document limit or subscription
+                if (error.response && error.response.status === 403) {
+                    setAlertMessage(error.response.data.error);
+                } else {
+                    // Handle other types of errors
+                    console.error('Error uploading file:', error);
+                }
+            }
         }
     };
 
@@ -116,6 +149,23 @@ const FileRender = () => {
         );
     };
 
+    const renderAlertMessage = () => {
+        if (!alertMessage) return null;
+    
+        return (
+            <div className="fixed top-0 left-0 w-screen z-50">
+                <div className="bg-white p-4 rounded-md shadow-md absolute top-10 left-1/2 transform -translate-x-1/2">
+                    <p className="text-lg text-gray-700">{alertMessage}</p>
+                    <button 
+                        onClick={() => setAlertMessage('')} 
+                        className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none">
+                        Close
+                    </button>
+                </div>
+            </div>
+        );
+    };
+    
     return (
         <div className="flex flex-col">
             <main className="flex-grow bg-white-700 overflow-auto">
@@ -191,7 +241,6 @@ const FileRender = () => {
                                         />
                                     </div>
                                 </div>
-
                             )}
                         </div>
                     </div>
