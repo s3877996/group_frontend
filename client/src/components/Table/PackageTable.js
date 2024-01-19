@@ -23,54 +23,57 @@ const PackageTable = () => {
     }, []);
 
     return (
-        <div className="mt-24 w-full min-w-max table-auto text-center">
-            <table className="w-full text-sm text-left rtl:text-right text-lime-950">
-                <thead className="text-xs text-gray-700 uppercase text-lime-950 bg-teal-600">
-                    <tr key="package_table">
-                        <th scope="col" className="px-2 py-3">Package Name</th>
-                        <th scope="col" className="px-2 py-3">Period</th>
-                        <th scope="col" className="px-2 py-3">No. Documents</th>
-                        <th scope="col" className="px-2 py-3">Price</th>
-                        <th scope="col" className="px-2 py-3">Description</th>
-                        <th scope="col" className="px-2 py-3"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                {packageData.map((pkg) => (
-                    <tr className="bg-white border-b border-gray-700" key={pkg.id}>
-                        <td className="px-2 py-4 place-content-center">
-                            <img
-                                src={pkg.thumbnail}
-                                alt={pkg.package_name}
-                                className="h-16 w-16"
-                            />
-                            <p className="pt-2 font-bold justify-items-center">{pkg.package_name}</p>
-                        </td>
-                        <td className="px-2 py-3">
-                            {pkg.package_period}
-                        </td>
-                        <td className="px-2 py-3">
-                            {pkg.limited_docs}
-                        </td>
-                        <td className="px-2 py-3">
-                            {pkg.package_price}
-                        </td>
-                        <td className="px-2 py-3 text-wrap">
-                            <p className="text-wrap">{pkg.package_description}</p> 
-                        </td>
-                        <td className="px-2 py-3 text-wrap">
-                            <button type="button" onClick={() => handleEditPackageInfo(pkg.id)}>
-                                <svg className="h-6 w-6 text-gray-500"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                                </svg>
-                            </button>
-                        </td>
-                    </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div> 
+<div className="mt-24 w-full min-w-max table-auto text-center">
+    <table className="w-full text-sm text-left rtl:text-right text-lime-950">
+        <thead className="text-xs text-white uppercase text-lime-950 bg-teal-600">
+            <tr key="package_table">
+                <th scope="col" className="px-4 py-3 text-left">Package Name</th>
+                <th scope="col" className="px-4 py-3 text-left">Period</th>
+                <th scope="col" className="px-4 py-3 text-left">No. Documents</th>
+                <th scope="col" className="px-4 py-3 text-left">Price</th>
+                <th scope="col" className="px-4 py-3 text-left">Description</th>
+                <th scope="col" className="px-4 py-3"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {packageData.map((pkg) => (
+            <tr className={pkg.id % 2 === 0 ? "bg-white border-b border-gray-700" : "bg-gray-100 border-b border-gray-700"} key={pkg.id}>
+                <td className="px-4 py-4 place-content-center">
+                    <img
+                        src={pkg.thumbnail}
+                        alt={pkg.package_name}
+                        className="h-16 w-16 object-cover rounded"
+                    />
+                    <p className="pt-2 font-bold justify-items-center">{pkg.package_name}</p>
+                </td>
+                <td className="px-4 py-3">
+                    {pkg.package_period}
+                </td>
+                <td className="px-4 py-3">
+                    {pkg.limited_docs}
+                </td>
+                <td className="px-4 py-3">
+                    {pkg.package_price}
+                </td>
+                <td className="px-4 py-3 text-wrap">
+                    <p className="text-wrap">{pkg.package_description}</p>
+                </td>
+                <td className="px-4 py-3 text-wrap">
+                    <button type="button" onClick={() => handleEditPackageInfo(pkg.id)} className="bg-teal-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+        ))}
+        </tbody>
+    </table>
+</div>
+
     )
 };
 
 export default PackageTable;
+

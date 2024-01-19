@@ -218,32 +218,40 @@ def delete_package_by_id_service(id):
 # Get all users
 def get_all_users_service(current_user):
     try:
-        packages = Package.query.all()
+        page = request.args.get('page', default=1, type=int)
+        page_size = request.args.get('pageSize', default=5, type=int)
 
-        if packages:
-            users_data = []
-            for package in packages:
-                package_subscriptions = Subscription.query.filter(Subscription.package_id == package.id).all()
-                for sub in package_subscriptions:
-                    user = User.query.filter(User.user_id == sub.user_id, User.user_role != 'admin').first()
-                    if user:
-                        # print(user.username)
+        users_data = User.query.filter(User.user_role != 'admin').paginate(page=page, per_page=page_size, error_out=False)
+
+        if users_data.items:
+            users_dict = {}  # Dictionary to store unique user data based on user_id
+            users_data_formatted = []
+
+            for user in users_data.items:
+                subscriptions = Subscription.query.filter_by(user_id=user.user_id).order_by(Subscription.start_time.desc()).first()
+
+                if subscriptions:
+                    package = Package.query.get(subscriptions.package_id)
+                    if package:
                         user_subscription = {
                             "username": user.username,
                             "user_email": user.user_email,
                             "user_joined_date": user.user_joined_date,
                             "user_active": user.active,
                             "package_name": package.package_name,
-                            "start_time": sub.start_time,
-                            "subscription_id": sub.subscription_id
+                            "start_time": subscriptions.start_time,
+                            "subscription_id": subscriptions.subscription_id
                         }
 
-                        users_data.append(user_subscription)
+                        users_dict[user.user_id] = user_subscription
+
+            users_data_formatted = list(users_dict.values())
 
             return jsonify(
                 {
                     "message": "Successfully finds all users",
-                    "data": users_data
+                    "data": users_data_formatted,
+                    "totalPages": users_data.pages
                 }
             )
         else:
@@ -259,6 +267,49 @@ def get_all_users_service(current_user):
             {"message": "Unable to find all users"},
             400  # Bad Request
         )
+# def get_all_users_service(current_user):
+#     try:
+#         packages = Package.query.all()
+#
+#         if packages:
+#             users_data = []
+#             for package in packages:
+#                 package_subscriptions = Subscription.query.filter(Subscription.package_id == package.id).all()
+#                 for sub in package_subscriptions:
+#                     user = User.query.filter(User.user_id == sub.user_id, User.user_role != 'admin').first()
+#                     if user:
+#                         # print(user.username)
+#                         user_subscription = {
+#                             "username": user.username,
+#                             "user_email": user.user_email,
+#                             "user_joined_date": user.user_joined_date,
+#                             "user_active": user.active,
+#                             "package_name": package.package_name,
+#                             "start_time": sub.start_time,
+#                             "subscription_id": sub.subscription_id
+#                         }
+#
+#                         users_data.append(user_subscription)
+#
+#             return jsonify(
+#                 {
+#                     "message": "Successfully finds all users",
+#                     "data": users_data
+#                 }
+#             )
+#         else:
+#             return make_response(
+#                 {"message": "No users found"},
+#                 404  # Not Found
+#             )
+#
+#     except Exception as e:
+#         print(e)
+#         db.session.rollback()
+#         return make_response(
+#             {"message": "Unable to find all users"},
+#             400  # Bad Request
+#         )
 
 
 # Get user by id

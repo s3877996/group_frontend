@@ -10,8 +10,8 @@ const AdminPackagePage = ()  =>{
             <div className="fixed top-0 left-0 w-screen z-50 bg-white shadow-md">
                 <AdminNavBar />
             </div>
-            <div>Hello</div>
-            <main className="flex-grow bg-white-200 overflow-auto pt-16">
+
+            <main className="flex-grow flex items-center justify-center bg-white-200 overflow-auto pt-2">
                 <div className="mx-auto max-w-screen-xl h-full w-full px-4">
                     <div className="flex min-h-screen justify-center">
                         <PackageTable/>
