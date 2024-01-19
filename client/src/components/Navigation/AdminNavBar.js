@@ -3,6 +3,7 @@ import Container from "@mui/material/Container";
 import Logo from './Logo'
 import Search from './Search'
 import AdminMenu from './AdminMenu';
+import AdminLogo from "./AdminLogo";
 
 const AdminNavBar = () => {
     return (
@@ -10,7 +11,7 @@ const AdminNavBar = () => {
             <div className="py-4 border-b-[1px]">
                 <Container>
                     <div className="flex flex-row items-center justify-between gap-2 md:gap-0">
-                        <Logo/>
+                        <AdminLogo/>
                         <AdminMenu/>
                     </div>
 
