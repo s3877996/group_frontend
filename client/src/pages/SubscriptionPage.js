@@ -57,57 +57,57 @@ const SubscriptionPage = () => {
       }, []);
     return (
 
-        <div className="flex flex-col ">
-            <main className="flex-grow bg-white-700 overflow-auto">
-                <div className="mx-auto max-w-screen-xl h-full w-full">
-                    <Navbar/>
-                </div>
-                <div
-                    className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5 z-50 place-items-center w-9/12 mx-auto mt-20">
-                    {subscription.map((item, idx) => (
-                        <div key={idx}
-                             className={`bg-white px-6 py-8 rounded-xl text-[#4f7cff] w-full mx-auto grid place-items-center ${planType === item.id && "border-[16px] border-green-400"}`}
-                        >
-                            <img
-                                src={item.thumbnail}
-                                alt=""
-                                width={200}
-                                height={200}
-                                className="h-40"
-                            />
-                            <div className="text-4xl text-slate-700 text-center py-4 font-bold">{item.package_name}</div>
-                            <p className="lg:text-sm text-xs text-center px-6 text-slate-500">
-                                {item.package_description}
-                            </p>
-                            <div className="text-4xl text-center font-bold py-4">
-                                ${item.package_price}
-                            </div>
-                            <div className="mx-auto flex justify-center items-center my-3">
-                                {
-                                    planType === item.id ? (
-                                        <button
-                                            className="bg-green-600 text-white rounded-md text-base uppercase w-24 py-2 font-bold"
-                                        >
-                                            Subscribed
-                                        </button>
-                                    ) : (
-                                        <button
-                                            onClick={e => payment(e, item.id)}
-                                            className="bg-[#3d5fc4] text-white rounded-md text-base uppercase w-24 py-2 font-bold"
-                                        >
-                                            Purchase
-                                        </button>
-                                    )}
-                            </div>
+<div className="flex flex-col h-screen">
+    <Navbar className="fixed top-0 left-0 w-full z-50 bg-white shadow-md" />
+    <main className="flex-grow bg-gray-200 overflow-auto pt-16">
+        <div className="mx-auto max-w-screen-xl h-full w-full py-8 px-4">
+            <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8 z-50 place-items-center w-full mx-auto">
+                {subscription.map((item, idx) => (
+                    <div key={idx}
+                        className={`bg-white px-6 py-8 rounded-xl text-[#4f7cff] w-full mx-auto grid place-items-center shadow-md ${planType === item.id && "border-4 border-green-400"}`}
+                    >
+                        <img
+                            src={item.thumbnail}
+                            alt=""
+                            width={200}
+                            height={200}
+                            className="h-40"
+                        />
+                        <div className="text-2xl text-slate-700 text-center py-4 font-bold">{item.package_name}</div>
+                        <p className="text-sm text-center px-6 text-slate-500">
+                            {item.package_description}
+                        </p>
+                        <div className="text-2xl text-center font-bold py-4">
+                            ${item.package_price}
                         </div>
-                    ))}
-                </div>
+                        <div className="mx-auto flex justify-center items-center my-3">
+                            {
+                                planType === item.id ? (
+                                    <button
+                                        className="bg-green-600 text-white rounded-md text-base uppercase w-24 py-2 font-bold"
+                                    >
+                                        Subscribed
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={e => payment(e, item.id)}
+                                        className="bg-[#3d5fc4] text-white rounded-md text-base uppercase w-24 py-2 font-bold"
+                                    >
+                                        Purchase
+                                    </button>
+                                )}
+                        </div>
+                    </div>
+                ))}
+            </div>
 
-                <div className="mx-auto max-w-screen-xl h-full w-full">
-                    <PaymentHistoryTable/>
-                </div>
-            </main>
+            <div className="mx-auto max-w-screen-xl h-full w-full py-8 px-4">
+                <PaymentHistoryTable/>
+            </div>
         </div>
+    </main>
+</div>
+
 
     )
 };

@@ -6,7 +6,6 @@ from server.database.models import Package, Subscription, User
 from .validate import (validate_email_and_password, validate_user, validate)
 import os, jwt
 
-logger = logging.basicConfig(level=logging.DEBUG)
 
 
 # Signin - Signup services
@@ -115,87 +114,6 @@ def login_service():
                    "data": None
                }, 500
 
-def before_google_request_service():
-    if not google.authorized:
-        return redirect(url_for('google.login'))
-
-def google_authorize_service():
-    resp = google.get('/plus/v1/people/me')
-    user_info = resp.json()
-    # Check if the user already exists in your database
-    existing_user = User.query.filter_by(email=user_info['emails'][0]['value']).first()
-    if existing_user:
-        # Log in the existing user
-        login_service(existing_user)
-    else:
-        # Create a new user
-        new_user = User(email=user_info['emails'][0]['value'], name=user_info['displayName'])
-        db.session.add(new_user)
-        db.session.commit()
-        # Log in the new user
-        login_service(new_user)
-    return redirect(url_for('index'))
-
-def google_login_service():
-    try:
-        # Perform Google login logic here (similar to the google_authorize_service function)
-        # ...
-
-        # For demonstration purposes, let's assume you have retrieved user information from Google
-        google_user_info = {
-            "email": "googleuser@example.com",
-            "display_name": "Google User"
-        }
-
-        # Check if the user already exists in your database
-        existing_user = User.query.filter_by(email=google_user_info['email']).first()
-
-        if existing_user:
-            # Log in the existing user using your current login mechanism
-            return login_service(existing_user)
-        else:
-            # Create a new user
-            new_user = User(email=google_user_info['email'], name=google_user_info['display_name'])
-            db.session.add(new_user)
-            db.session.commit()
-
-            # Log in the new user using your current login mechanism
-            return login_service(new_user)
-
-    except Exception as e:
-        return {
-            "error": "Something went wrong during Google login",
-            "message": str(e)
-        }, 500
-
-
-# def google_authorized_service():
-#     response = google.authorized_response()
-#     if response is None or response.get('access_token') is None:
-#         return 'Access denied: reason={} error={}'.format(
-#             request.args['error_reason'],
-#             request.args['error_description']
-#         )
-#
-#     google_user_info = google.get('userinfo')
-#     email = google_user_info.data['email']
-#
-#     # Check if the user already exists in your database, or create a new user
-#     user = User.query.filter_by(user_email=email).first()
-#
-#     if not user:
-#         # Create a new user in your database
-#         user = User.create(
-#             username=google_user_info.data['name'],
-#             user_email=email,
-#             user_role='user'  # Assign a default role
-#         )
-#
-#     # Generate JWT token
-#     token = create_access_token(identity=str(user.user_id))
-#
-#     # Redirect or return the token as needed
-#     return jsonify({"token": token, "user_data": user.to_dict()})
 
 
 # Get current user
@@ -244,27 +162,7 @@ def get_current_sub_sv(current_user):
         return jsonify({"message": "Something went wrong", "error": str(e)}), 500
 
 
-# Update user
-# def update_user_service(current_user):
-#     try:
-#         user = request.json
-#         if user.get("username"):
-#             user = User().update(current_user["_id"], user["username"])
-#             return jsonify({
-#                 "message": "successfully updated account",
-#                 "data": user
-#             }), 201
-#         return {
-#                    "message": "Invalid data, you can only update your account name!",
-#                    "data": None,
-#                    "error": "Bad Request"
-#                }, 400
-#     except Exception as e:
-#         return jsonify({
-#             "message": "failed to update account",
-#             "error": str(e),
-#             "data": None
-#         }), 400
+
 def update_user_service(current_user):
     try:
         user_data = request.json
@@ -306,3 +204,4 @@ def forbidden_service(e):
 
 def not_found_service(e):
     return jsonify({"message": "Endpoint Not Found", "error": str(e)}), 404
+
