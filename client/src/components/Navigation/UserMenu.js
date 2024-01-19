@@ -79,7 +79,7 @@ const UserMenu = () =>{
                         <MenuItem onClick={handleHome} label="Home" Icon={HomeIcon} />
                         <MenuItem onClick={handleUserProfile} label="My Profile" Icon={UserCircleIcon}/>
                         <MenuItem onClick={handleSubscriptionToggling} label="My Subscription" Icon={CreditCardIcon}/>
-                        <MenuItem onClick={handleProfileToggling} label="Detail Information" Icon={ReceiptRefundIcon}/>
+                        <MenuItem onClick={handleProfileToggling} label="Edit Profile" Icon={ReceiptRefundIcon}/>
                         <MenuItem onClick={handleDocumentHistory} label="Document History" Icon={QueueListIcon}/>
                         <hr/>
                         <MenuItem onClick={handleSignOut} label="Sign Out" Icon={() => <PowerIcon className="text-red-500 mr-2 h-5 w-5"/>} />

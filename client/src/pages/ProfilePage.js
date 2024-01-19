@@ -144,11 +144,21 @@ return (
                                 Phone:
                             </label>
                             <input
-                                type="phone"
+                                type="tel"
                                 id="phone"
                                 className="mt-1 p-2 w-full border rounded-md"
                                 value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
+                                // onChange={(e) => setPhone(e.target.value)}
+                                onChange={(e) => {
+                                    // Ensure only digits are entered
+                                    const enteredValue = e.target.value.replace(/\D/g, '');
+
+                                    // Limit the input to 10 digits
+                                    const limitedValue = enteredValue.slice(0, 10);
+
+                                    // Update the state with the limited value
+                                    setPhone(limitedValue);
+                                }}
                             />
                         </div>
                         <div>
@@ -169,7 +179,7 @@ return (
                         className="w-full bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-4"
                         onClick={handleChangePassword}
                     >
-                        Change Password
+                        Update Account
                     </button>
                 </div>
             </div>
