@@ -5,6 +5,7 @@ from datetime import datetime
 from server.database.db import db
 from server.database.models import Document
 from server.database.models import CorrectedDocument
+from server.database.models import Subscription 
 from server.auth.auth_middleware import token_required
 from .services import read_and_parse_docx, correct_text_with_api, create_corrected_docx, get_all_documents_of_user_service, get_document_of_user_by_id_service, get_document_of_user_by_name_service
 import logging
@@ -28,6 +29,11 @@ def serve_download_file(filename):
 @documents.route('/upload', methods=['POST'])
 @token_required(required_role='user')
 def upload(current_user):
+    # Check if the user can upload more documents
+    can_upload, message = Subscription.can_upload_document(current_user.user_id)
+    if not can_upload:
+        return jsonify({"error": message}), 403
+
     if 'file' not in request.files:
         return jsonify(error="No file part"), 400
     file = request.files['file']
