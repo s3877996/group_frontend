@@ -118,43 +118,6 @@ def get_package_by_id_service(id):
             400  # Bad Request
         )
 
-
-# Get package by name
-def get_package_by_name_service():
-    try:
-        data = request.args.get('name')
-
-        if data:
-            packages = Package.query \
-                .join(data) \
-                .filter(func.lower(Package.package_name) \
-                        .like('%' + data.lower() + '%')) \
-                .all()
-            if packages:
-                return make_response(
-                    packages_schema.jsonify(packages),
-                    200
-                )
-            else:
-                return make_response(
-                    {"message": "Package not found"},
-                    404  # Not Found
-                )
-        else:
-            return make_response(
-                {"message": "Invalid request"},
-                400  # Bad Request
-            )
-
-    except Exception as e:
-        print(e)
-        db.session.rollback()
-        return make_response(
-            {"message": "Unable to find package by name"},
-            400  # Bad Request
-        )
-
-
 # Update package --------------------------------
 def update_package_by_id_service(id):
     try:

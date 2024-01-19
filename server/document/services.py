@@ -64,9 +64,9 @@ def create_corrected_docx(original_file_path, corrected_paragraphs):
 
 
 # Get all document by user ID
-def get_all_documents_of_user_service(user_id):
+def get_all_documents_of_user_service(current_user):
     try:
-        documents = Document.query.filter_by(user_id=user_id).all()
+        documents = Document.query.filter_by(user_id=current_user.user_id).all()
         if documents:
             return make_response(
                 documents_schema.jsonify(documents),

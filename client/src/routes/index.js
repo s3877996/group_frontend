@@ -12,6 +12,8 @@ import RegisterPage from "../pages/RegisterPage";
 import ProfilePage from "../pages/ProfilePage";
 import UserProfilePage from "../pages/UserProfilePage";
 import SubscriptionPage from "../pages/SubscriptionPage";
+import DocumentHistoryPage from "../pages/DocumentHistoryPage";
+import DocumentViewerPage from "../pages/DocumentViewerPage";
 import SuccessPage from "../pages/SuccessPage";
 
 const Routes = () => {
@@ -32,16 +34,12 @@ const Routes = () => {
       element:<SubscriptionPage/>
     },
     {
-      path:'/admin/dashboard',
-      element:<AdminPage/>
+      path: '/document_history',
+      element: <DocumentHistoryPage/>
     },
     {
-      path:'/admin/users',
-      element:<AdminUserPage/>
-    },
-    {
-      path:'/admin/packages',
-      element:<AdminPackagePage/>
+      path: '/document_history/document/:documentId',
+      element: <DocumentViewerPage/>
     },
     {
       path: "/login",
