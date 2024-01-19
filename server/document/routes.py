@@ -7,6 +7,7 @@ from server.database.models import Document
 from server.database.models import CorrectedDocument
 from server.auth.auth_middleware import token_required
 from .services import read_and_parse_docx, correct_text_with_api, create_corrected_docx, get_all_documents_of_user_service, get_document_of_user_by_id_service, get_document_of_user_by_name_service
+import logging
 
 documents = Blueprint('document', __name__)
 
@@ -36,15 +37,19 @@ def upload(current_user):
         filename = secure_filename(file.filename)
         file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
         try:
+            logging.debug("Processing file upload")
+
             file.save(file_path)
 
             # Process the file to get the content
             paragraphs = read_and_parse_docx(file_path)
-            original_content = '\n\n'.join(paragraphs)
+            original_content = '\n\n'.join([para['text'] for para in paragraphs])
 
-             # Correct each paragraph with the API
-            corrected_paragraphs = [correct_text_with_api(para) for para in paragraphs]
-            corrected_content = '\n\n'.join(corrected_paragraphs)
+            # Correct each paragraph with the API
+            corrected_paragraphs = [correct_text_with_api(para['text']) for para in paragraphs]
+            #corrected_paragraphs = [correct_text_with_api(para) for para in paragraphs]
+
+            corrected_content = '\n'.join(corrected_paragraphs)
 
             # Save the corrected document in DOWNLOAD_FOLDER
             corrected_file_path = create_corrected_docx(file_path, corrected_paragraphs)
@@ -80,6 +85,7 @@ def upload(current_user):
             db.session.commit()
 
         except Exception as e:
+            logging.error(f"Error in upload route: {e}")
             db.session.rollback()
             return jsonify(error=f"An error occurred while saving the file: {str(e)}"), 500
         return jsonify(success = "File successfully uploaded", 
@@ -93,7 +99,6 @@ def upload(current_user):
                        corrected_file_name=corrected_file_name),200
     else:
         return jsonify(error="File type not allowed")
-    
 
 @documents.route('/download/<filename>', methods=['GET'])
 def download_corrected_document(filename):
