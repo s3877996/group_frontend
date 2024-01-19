@@ -1,4 +1,25 @@
+# Project Report and Current Tasks
+
+## Report Link
+[Project Report](https://docs.google.com/document/d/1FG3OdvauwTtOUZFuxEWtOVfqYwLLnVL5pl6U9eNMtwY/edit?fbclid=IwAR1Mc5dGRtpuSbVneENj2votZFFg0crDUvxCCXmlqUkmYDVvPYGApEXPy18)
+
+## Current Task
+
+### Hien & Nhat:
+- Review and edit report (not done).
+- Check and update all the functions of Admin (done).
+- Check and update all the functions of User (done).
+  - Related to docs function (AI, view docs history, decrease available docs when uploading) (not done).
+
+### DA or Duong:
+- Test functions related to docs (AI, view docs history, decrease available docs when uploading).
+- Test payments functionality.
+
+
+
+
 # Getting Started with Create React App
+
 
 If you cannot run the React app, install all of these dependencies.\
 npm i react-router-dom.\
