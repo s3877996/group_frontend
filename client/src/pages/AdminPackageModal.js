@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import AdminNavBar from "../components/Navigation/AdminNavBar";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, Toaster} from 'react-hot-toast';
+
 import api from "../api";
 
 const AdminPackageModal = () => {
@@ -72,9 +73,12 @@ const AdminPackageModal = () => {
             console.log(response.data);
 
             // Display a success toast, with a title
-            toast.success("Update user details successful!", {
+            toast.success("Update Package details successful!", {
                 duration: 3000,
             });
+
+            //Navigate to previous page
+             navigate('/admin/packages');
         } catch (error) {
             // Handle error, show an error message
             console.error('Error updating password:', error.response.data.message);
@@ -188,6 +192,8 @@ return (
                         >
                             Change Package Information
                         </button>
+
+
                     </div>
                 </div>
             </div>

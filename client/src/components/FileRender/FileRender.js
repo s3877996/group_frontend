@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import axios from 'axios';
 import CorrectedFileRender from './CorrectedFileRender';
 
@@ -24,7 +24,7 @@ const FileRender = () => {
 
             //Upload file to the backend and process it
             try {
-                const response = await axios.post('http://127.0.0.1:5000/document/upload',formData, {
+                const response = await axios.post('http://127.0.0.1:5000/document/upload', formData, {
                     headers: {
                         'Authorization': `Bearer ${authToken}`  // Include the auth token in the request header
                     },
@@ -61,7 +61,7 @@ const FileRender = () => {
     };
 
     const renderDocumentPreview = () => {
-        if(!originalFileContent) return null;
+        if (!originalFileContent) return null;
 
         return (
             <div className="px-4 pt-40 bg-white shadow rounded-lg overflow-auto max-h-[120vh]">
@@ -69,7 +69,7 @@ const FileRender = () => {
                     <h1 className="w-full max-w-4 text-2xl font-semibold text-gray-700 mb-4 pb-2">Uploaded File Content</h1>
 
                     {/* Reload page button */}
-                    <button type="button" 
+                    <button type="button"
                         onClick={() => window.location.reload(false)}
                         className="w-10 h-10 bg-blue-600 hover:bg-blue-700 border border-transparent rounded-md p-2.5 inline-flex items-center bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
@@ -78,9 +78,9 @@ const FileRender = () => {
                     </button>
                 </div>
 
-                <div className="text-container mb-4 p-4 border border-gray-300 rounded-lg bg-gray-50" 
+                <div className="text-container mb-4 p-4 border border-gray-300 rounded-lg bg-gray-50"
                     style={{ whiteSpace: "pre-wrap", textAlign: "left" }}>
-                    <div className="text-gray-800"> 
+                    <div className="text-gray-800">
                         {originalFileContent}
                     </div>
                 </div>
@@ -115,14 +115,14 @@ const FileRender = () => {
             </div>
         );
     };
-    
+
     return (
         <div className="flex flex-col">
             <main className="flex-grow bg-white-700 overflow-auto">
                 <div className="mx-auto max-w-screen-xl h-full w-full">
-                    <div className="flex min-h-screen justify-center">
+                    <div className="flex flex-col md:flex-row min-h-screen justify-center">
                         {/*Insert file in the left-hand side container*/}
-                        <div className="sm:w-1/2 bg-white-500 text-white flex items-center justify-center border">
+                        <div className="md:w-1/2 bg-white-500 text-white flex items-center justify-center border">
                             {!wordFile && (
                                 <div className="w-full h-full px-4 pt-24 space-y-24 bg-white shadow rounded-lg overflow-hidden max-h-[120vh]">
                                     <h1 className="text-2xl font-semibold text-gray-700 mb-4 pb-2">Uploaded File Content</h1>
@@ -159,7 +159,7 @@ const FileRender = () => {
                             )}
 
                             {renderLoadingIndicator()}
-                    
+
                             {/* After receiving file */}
                             {wordFile && (
                                 <div className="flex items-stretch justify-center h-screen">
@@ -167,11 +167,10 @@ const FileRender = () => {
                                         {renderDocumentPreview()}
                                     </div>
                                 </div>
-                                
-                            )}   
+                            )}
                         </div>
 
-                        <div className="sm:w-1/2 bg-white flex items-center justify-center border">
+                        <div className="md:w-1/2 bg-white flex items-center justify-center border">
                             {/* Render CorrectedFileRender if corrected file name is available */}
                             {!correctedFileName && (
                                 <div className="w-full h-full px-4 pt-24 bg-white shadow rounded-lg overflow-auto max-h-[120vh]">
@@ -179,20 +178,20 @@ const FileRender = () => {
                                         <h1 className="w-full max-w-4 text-2xl font-semibold text-gray-700 mb-4 pb-2">Corrected File Content</h1>
                                     </div>
                                 </div>
-                                
+
                             )}
 
                             {/* Render CorrectedFileRender if corrected file name is available */}
                             {correctedFileName && (
                                 <div className="flex items-stretch justify-center h-screen">
                                     <div className="self-center">
-                                        <CorrectedFileRender 
-                                            correctedFileName={correctedFileName} 
-                                            correctedFileContent={correctedFileContent} 
+                                        <CorrectedFileRender
+                                            correctedFileName={correctedFileName}
+                                            correctedFileContent={correctedFileContent}
                                         />
                                     </div>
                                 </div>
-                                
+
                             )}
                         </div>
                     </div>

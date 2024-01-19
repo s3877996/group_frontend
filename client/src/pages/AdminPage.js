@@ -5,19 +5,18 @@ import AdminNavBar from "../components/Navigation/AdminNavBar";
 
 const AdminPage = ()  =>{
     return (
-        <div className="flex flex-col ">
-            <main className="flex-grow bg-white-700 overflow-auto">
+        <div className="flex flex-col h-screen">
+            <AdminNavBar className="fixed top-0 left-0 w-full z-50" />
+            <main className="flex-grow bg-white-700 overflow-auto pt-16">
                 <div className="mx-auto max-w-screen-xl h-full w-full">
-                    <AdminNavBar/>
-
-                    <div className="pt-36 flex flex-row items-center divide-x divide-teal-400 divide-dashed hover:divide-solid">
+                    <div className="pt-20 flex flex-row items-center divide-x divide-teal-400 divide-dashed hover:divide-solid">
                         <SubscriptionStatistics/>
                         <RevenueChart/>
                     </div>
-
                 </div>
             </main>
         </div>
+
       );
 }
 export default AdminPage;
