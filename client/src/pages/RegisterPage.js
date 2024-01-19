@@ -97,6 +97,7 @@ const RegisterPage = () => {
 
 return (
   <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+          {error && <div className="text-red-500 mt-4">{error}</div>}
     <form className="w-full max-w-md bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
       {/* Username */}
       <div className="mb-6">
@@ -155,7 +156,6 @@ return (
           onChange={(e) => setRole(e.target.value)}
         >
           <option value="user">User</option>
-          <option value="admin">Admin</option>
         </select>
       </div>
 
@@ -176,7 +176,7 @@ return (
           </button>
         </div>
       </form>
-      {error && <div className="text-red-500 mt-4">{error}</div>}
+
     </div>
   );
 };
