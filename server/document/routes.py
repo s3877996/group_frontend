@@ -99,7 +99,7 @@ def upload(current_user):
                        corrected_file_name=corrected_file_name),200
     else:
         return jsonify(error="File type not allowed")
-
+    
 @documents.route('/download/<filename>', methods=['GET'])
 def download_corrected_document(filename):
     # Ensure the filename is safe and not an absolute path or contains ".."
@@ -115,8 +115,7 @@ def download_corrected_document(filename):
                                    as_attachment=True)
     except FileNotFoundError:
         return jsonify(error="File not found"), 404
-    
-    
+
 # Get all documents
 @documents.route('/user_documents', methods=['GET'])
 @token_required(required_role='user')

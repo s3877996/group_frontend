@@ -56,7 +56,6 @@ class User(db.Model):
     stripe_id = db.Column(db.String(255), nullable=True)
     active = db.Column(db.Boolean, default=True, nullable=False)
     documents = db.relationship('Document', backref='user', lazy=True)
-    histories = db.relationship('History', backref='user', lazy=True)
     subscriptions = db.relationship('Subscription', back_populates='user', lazy=True)
 
     def __repr__(self):

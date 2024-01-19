@@ -4,8 +4,17 @@ from server.database.models import Document
 from server.database.schema import DocumentSchema
 from sqlalchemy.sql import func
 from docx import Document as DocxDocument
+from docx.shared import Pt
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx.shared import RGBColor
+
 import requests
 import os
+import logging
+
+logging.basicConfig(level=logging.DEBUG, 
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 document_schema = DocumentSchema()
 documents_schema = DocumentSchema(many=True)
@@ -16,8 +25,20 @@ documents_schema = DocumentSchema(many=True)
     :return: divided paragraphs from the file contents
 """
 def read_and_parse_docx(file_path):
-    doc = DocxDocument(file_path)
-    paragraphs = [para.text for para in doc.paragraphs if para.text.strip() != '']
+    try:
+        logging.debug(f"Reading DOCX file: {file_path}")
+        doc = DocxDocument(file_path)
+        paragraphs = []
+        for para in doc.paragraphs:
+            if para.text.strip() != '':
+                paragraph_data = {
+                    "text": para.text,
+                    "runs": [{"text": run.text, "style": run.style} for run in para.runs]
+                }
+                paragraphs.append(paragraph_data)
+    except Exception as e:
+        logging.error(f"Error in read_and_parse_docx: {e}")
+        raise
     return paragraphs
 
 """
@@ -51,22 +72,107 @@ def correct_text_with_api(paragraph):
     :param 2: corrected paragraphs
     :return: path of the corrected file
 """
+# def create_corrected_docx(original_file_path, corrected_paragraphs):
+#     try:
+#         logging.debug(f"Creating corrected DOCX file from: {original_file_path}")
+#         doc = DocxDocument(original_file_path)
+#         for i, para in enumerate(doc.paragraphs):
+#             if i < len(corrected_paragraphs):
+#                 # Remember original paragraph formatting
+#                 original_alignment = para.paragraph_format.alignment
+
+#                 # Clear all runs in the paragraph
+#                 for run in para.runs:
+#                     run.clear()
+
+#                 # Rebuild the paragraph with corrected text but original formatting
+#                 corrected_para_text = corrected_paragraphs[i].split()
+#                 for word in corrected_para_text:
+#                     # Add run with original formatting
+#                     new_run = para.add_run(word + " ")
+#                     if para.runs:  # Copy style from the first run if available
+#                         original_run = para.runs[0]
+#                         new_run.bold = original_run.bold
+#                         new_run.italic = original_run.italic
+#                         new_run.underline = original_run.underline
+#                         new_run.font.size = original_run.font.size
+#                         new_run.font.name = original_run.font.name
+
+#                 # Apply the original paragraph formatting
+#                 para.paragraph_format.alignment = original_alignment
+
+#         corrected_file_name = os.path.basename(original_file_path).replace('.docx', '_corrected.docx')
+#         corrected_file_path = os.path.join(current_app.config['DOWNLOAD_FOLDER'], corrected_file_name)
+#         doc.save(corrected_file_path)
+#     except Exception as e:
+#         logging.error(f"Error in create_corrected_docx: {e}")
+#         raise
+#     return corrected_file_path
+
+def get_run_formatting(run):
+    """Extracts the formatting of a run."""
+    return {
+        'bold': run.bold,
+        'italic': run.italic,
+        'underline': run.underline,
+        'font_name': run.font.name,
+        'font_size': run.font.size,
+        'font_color': run.font.color.rgb if run.font.color else None,
+        'highlight_color': run.font.highlight_color,
+        'strike': run.font.strike,
+        'subscript': run.font.subscript,
+        'superscript': run.font.superscript,
+        # Add more formatting properties as needed
+    }
+
+def apply_run_formatting(run, formatting):
+    """Applies the formatting to a run."""
+    run.bold = formatting.get('bold')
+    run.italic = formatting.get('italic')
+    run.underline = formatting.get('underline')
+    run.font.name = formatting.get('font_name')
+    run.font.size = formatting.get('font_size')
+    if formatting.get('font_color') is not None:
+        run.font.color.rgb = formatting.get('font_color')
+    run.font.highlight_color = formatting.get('highlight_color')
+    run.font.strike = formatting.get('strike')
+    run.font.subscript = formatting.get('subscript')
+    run.font.superscript = formatting.get('superscript')
+    # Apply more formatting properties as needed
+
 def create_corrected_docx(original_file_path, corrected_paragraphs):
-    doc = DocxDocument(original_file_path)
-    for i, para in enumerate(doc.paragraphs):
-        if i < len(corrected_paragraphs):  
-            para.clear()  
-            para.add_run(corrected_paragraphs[i])  
-    corrected_file_name = os.path.basename(original_file_path).replace('.docx', '_corrected.docx')
-    corrected_file_path = os.path.join(current_app.config['DOWNLOAD_FOLDER'], corrected_file_name)
-    doc.save(corrected_file_path)
+    try:
+        logging.debug(f"Creating corrected DOCX file from: {original_file_path}")
+        doc = DocxDocument(original_file_path)
+
+        for i, para in enumerate(doc.paragraphs):
+            if i < len(corrected_paragraphs):
+                # Extract original run formatting
+                run_formats = [get_run_formatting(run) for run in para.runs]
+
+                # Clear the paragraph
+                para.clear()
+
+                # Rebuild the paragraph with corrected text
+                corrected_para = corrected_paragraphs[i]
+                new_run = para.add_run(corrected_para)
+
+                # Apply the original formatting to the new runs
+                for fmt in run_formats:
+                    apply_run_formatting(new_run, fmt)
+
+        corrected_file_name = os.path.basename(original_file_path).replace('.docx', '_corrected.docx')
+        corrected_file_path = os.path.join(current_app.config['DOWNLOAD_FOLDER'], corrected_file_name)
+        doc.save(corrected_file_path)
+    except Exception as e:
+        logging.error(f"Error in create_corrected_docx: {e}")
+        raise
     return corrected_file_path
 
-
 # Get all document by user ID
-def get_all_documents_of_user_service(current_user):
+def get_all_documents_of_user_service(user_id):
     try:
-        documents = Document.query.filter_by(user_id=current_user.user_id).all()
+        documents = Document.query.filter_by(user_id=user_id).all()
         if documents:
             return make_response(
                 documents_schema.jsonify(documents),
