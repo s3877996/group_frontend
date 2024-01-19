@@ -166,21 +166,6 @@ class User(db.Model):
 
         return user
 
-
-# Record list of users that have use the trial package
-class History(db.Model):
-    __tablename__ = 'histories'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-
-    def __repr__(self):
-        return f'<History {self.user_id}>'
-
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
-
 # Uploaded Document
 class Document(db.Model):
     __tablename__ = 'documents'
