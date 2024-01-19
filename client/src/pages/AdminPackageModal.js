@@ -59,6 +59,32 @@ const AdminPackageModal = () => {
     //update package name
     const handleChangePackage= async () => {
         try {
+            // Validate price
+            if (!price || isNaN(parseFloat(price)) || parseFloat(price) <= 0) {
+                toast.error("Please enter a valid price.", {
+                    duration: 3000,
+                });
+                return;
+            }
+
+            // Validate docs
+            if (!docs || isNaN(parseInt(docs)) || parseInt(docs) <= 0) {
+                toast.error("Please enter a valid number of docs.", {
+                    duration: 3000,
+                });
+                return;
+            }
+
+            // Validate package period
+            const periodRegex = /^([1-9]|1\d|2[0-9]|30)\s+days$/; // Regular expression for "number + days"
+            if (!period || !periodRegex.test(period.trim())) {
+                toast.error("Please enter a valid package period (e.g., 5 days). The number should be between 1 and 30.", {
+                    duration: 3000,
+                });
+                return;
+            }
+
+
             // Make API request to update password
             const response = await api.put(`/admin/update_package/${packageId}`, {
                 package_name: name,
