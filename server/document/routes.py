@@ -60,7 +60,7 @@ def upload(current_user):
             original_file_url = request.url_root + 'upload-files/' + filename
             corrected_file_url = request.url_root + 'download-files/' + corrected_file_name
 
-             # Create and save the document metadata in the database
+            # Create and save the document metadata in the database
             new_document = Document(
                 document_name=filename,
                 user_id=current_user.user_id,
@@ -120,7 +120,7 @@ def download_corrected_document(filename):
 @documents.route('/user_documents', methods=['GET'])
 @token_required(required_role='user')
 def get_all_documents_of_user(current_user):
-    return get_all_documents_of_user_service(current_user) 
+    return get_all_documents_of_user_service(current_user.user_id) 
 
 # Get document by id
 @documents.route('/user_documents/document/<int:document_id>', methods=['GET'])
