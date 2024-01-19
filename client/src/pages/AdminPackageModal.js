@@ -89,39 +89,47 @@ const AdminPackageModal = () => {
         }
     };
 
-return (
-    <div className="flex flex-col h-screen bg-gray-100">
-        <AdminNavBar/>
-        <main className="pt-24 flex items-center justify-center h-full overflow-auto">
-            <div className="container mx-auto mt-8">
-                <div className="max-w-md mx-auto bg-white p-6 rounded-md shadow-md">
-                    <h2 className="text-2xl font-bold pt-32 text-center">Package Information</h2>
-                    <div className="flex justify-center items-center">
-                        <img
-                            src={packageData.thumbnail}
-                            alt={packageData.package_name}
-                            className="h-20 w-20"
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <p><strong>Package Thumbnail:</strong> {packageData.thumbnail}</p>
-                    </div>
-                    <div>
-                        <h3 className="text-xl font-bold mb-2">Change Information</h3>
-                        <div className="space-y-4">
-                            <div>
-                                <label htmlFor="name" className="block text-sm font-medium text-gray-600">
-                                    Package Name:
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    className="mt-1 p-2 w-full border rounded-md"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                />
-                            </div>
-                            <div>
+    return (
+        <div className="flex flex-col h-screen bg-gray-100">
+            <AdminNavBar />
+
+            <main className="pt-24 flex items-center justify-center h-full overflow-auto">
+                <div className="container mx-auto mt-32">
+                    <div className="max-w-md mx-auto bg-white p-6 rounded-md shadow-md">
+                        <h2 className="text-2xl font-bold pt-32 text-center">Package Information</h2>
+
+                        <div className="flex justify-center items-center">
+                            <img
+                                src={packageData.thumbnail}
+                                alt={packageData.package_name}
+                                className="h-20 w-20"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <p>
+                                <strong>Package Thumbnail:</strong> {packageData.thumbnail}
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 className="text-xl font-bold mb-2">Change Information</h3>
+                            <div className="space-y-4">
+                                <div>
+                                    <label htmlFor="name" className="block text-sm font-medium text-gray-600">
+                                        Package Name:
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="name"
+                                        className="mt-1 p-2 w-full border rounded-md"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+                                </div>
+
+                                {/* ... (Repeat the structure for other input fields) ... */}
+                                                            <div>
                                 <label htmlFor="period" className="block text-sm font-medium text-gray-600">
                                     Package Period:
                                 </label>
@@ -185,24 +193,25 @@ return (
                                     onChange={(e) => setDescription(e.target.value)}
                                 />
                             </div>
+
+
+                                <button
+                                    className="w-full bg-teal-500 text-white px-4 py-2 rounded-md hover:bg-teal-800 mt-4"
+                                    onClick={handleChangePackage}
+                                >
+                                    Change Package Information
+                                </button>
+                            </div>
                         </div>
-                        <button
-                            className="w-full bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 mt-4"
-                            onClick={handleChangePackage}
-                        >
-                            Change Package Information
-                        </button>
-
-
                     </div>
                 </div>
-            </div>
-        </main>
-    </div>
-);
-
-
-
+            </main>
+        </div>
+    );
 };
 
+
 export default AdminPackageModal;
+
+
+

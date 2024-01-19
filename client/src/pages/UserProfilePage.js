@@ -58,13 +58,14 @@ const UserProfilePage = ({ token }) => {
     return (
         <div className="flex flex-col h-screen bg-gray-100">
             <Navbar />
-            <div className="flex bg-gray-100 min-h-screen items-center justify-center p-4 md:p-8"> {/* Updated: Added padding for small screens */}
-                        <div className="flex-grow mx-auto max-w-md lg:max-w-3xl  bg-white rounded-xl shadow-md overflow-hidden "> {/* Updated: Adjusted max-w classes */}
+
+            <div className="flex bg-gray-100 min-h-screen mt-10 pt-24 md:p-8 items-center  md:p-8 "> {/* Updated: Added padding for small screens */}
+                <div className="flex-grow mx-auto max-w-md lg:max-w-3xl  bg-white rounded-xl shadow-md overflow-hidden "> {/* Updated: Adjusted max-w classes */}
                     <div className="md:flex">
                         <div className="md:flex-shrink-0 md:text-center">
                             <img className="h-48 w-full object-cover md:w-48 mx-auto sm:rounded-none md:rounded-full" src={avatar} alt="Profile Picture" />
                         </div>
-                                    <div className="p-8 w-full md:w-2/3 lg:w-1/2 xl:w-2/3"> {/* Updated: Set width to full on small screens, and adjust on larger screens */}
+                        <div className="p-8 w-full md:w-2/3 lg:w-1/2 xl:w-2/3"> {/* Updated: Set width to full on small screens, and adjust on larger screens */}
                             <div className="uppercase tracking-wide text-sm text-green-500 font-semibold">Account</div>
                             <a href="#" className="block mt-1 text-lg leading-tight font-medium text-black hover:underline">{userData?.user_email}</a>
                             <div className="mt-4 mr:auto">

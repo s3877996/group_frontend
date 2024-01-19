@@ -11,7 +11,6 @@ const AdminNavBar = () => {
                 <Container>
                     <div className="flex flex-row items-center justify-between gap-2 md:gap-0">
                         <Logo/>
-                        <Search/>
                         <AdminMenu/>
                     </div>
 
