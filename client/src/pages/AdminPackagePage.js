@@ -1,20 +1,26 @@
+
 import React from "react";
 import AdminNavBar from "../components/Navigation/AdminNavBar";
 import PackageTable from "../components/Table/PackageTable";
+import Navbar from "../components/Navigation/Navbar";
 
 const AdminPackagePage = ()  =>{
     return (
-        <div className="flex flex-col ">
-          <main className="flex-grow bg-white-700 overflow-auto">
-              <div className="mx-auto max-w-screen-xl h-full w-full">
-                <AdminNavBar/>
-  
-                <div className="flex min-h-screen justify-center">
-                    <PackageTable/>
+        <div className="flex flex-col h-screen">
+            <div className="fixed top-0 left-0 w-screen z-50 bg-white shadow-md">
+                <AdminNavBar />
+            </div>
+            <div>Hello</div>
+            <main className="flex-grow bg-white-200 overflow-auto pt-16">
+                <div className="mx-auto max-w-screen-xl h-full w-full px-4">
+                    <div className="flex min-h-screen justify-center">
+                        <PackageTable/>
+                    </div>
                 </div>
-              </div>
-          </main>
+            </main>
         </div>
+
       );
 }
 export default AdminPackagePage;
+
