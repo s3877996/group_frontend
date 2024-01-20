@@ -2,7 +2,7 @@ import React from 'react';
 
 const CorrectedFileRender = ({ correctedFileName, correctedFileContent }) => {
     return (
-        <div className="px-4 pt-40 pb-2 bg-white shadow rounded-lg overflow-auto max-h-[120vh] md:max-h-[90vh] lg:max-h-[80vh] mx-auto w-full sm:w-3/4 lg:w-1/2">
+        <div className="px-4 pt-40 pb-2 bg-white shadow rounded-lg overflow-auto max-h-[120vh] md:max-h-[90vh] lg:max-h-[80vh] mx-auto w-full">
             <div className="flex flex-col md:flex-row pb-2">
                 <h1 className="w-full max-w-4 text-2xl font-semibold text-gray-700 mb-4 md:mb-0">Corrected File Content</h1>
 
