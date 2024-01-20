@@ -5,10 +5,11 @@ import { toast } from 'react-hot-toast';
 
 const validate = (data, regex) => {
   return Boolean(data.match(regex));
+  
 };
 
 const validatePassword = (password) => {
-  const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$/;
+api  const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$/;
   return validate(password, reg);
 };
 
@@ -55,7 +56,7 @@ const RegisterPage = () => {
 
     try {
       
-      const response = await axios.post('https://group-frontend-arch-2024.vercel.app/api/register', {
+      const response = await axios.post('https://api.prosepilot.site/api/register', {
         username: username,
         user_email: email,
         user_password: password,
