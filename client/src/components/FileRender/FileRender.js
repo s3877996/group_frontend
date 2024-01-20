@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import axios from 'axios';
+//import axios from 'axios';
+import api from "../../api";
 import CorrectedFileRender from './CorrectedFileRender';
 
 const FileRender = () => {
@@ -14,11 +15,7 @@ const FileRender = () => {
 
     const checkProcessingStatus = async () => {
         try {
-            const statusResponse = await axios.get('http://127.0.0.1:5000/document/processing-status', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
+            const statusResponse = await api.get('document/processing-status');
 
             const { status, progress: processingProgress } = statusResponse.data;
             const totalProgress = 50 + (processingProgress / 2);
@@ -50,10 +47,7 @@ const FileRender = () => {
 
             //Upload file to the backend and process it
             try {
-                const response = await axios.post('http://127.0.0.1:5000/document/upload', formData, {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`  // Include the auth token in the request header
-                    },
+                const response = await api.post('document/upload', formData, {
                     onUploadProgress: (progressEvent) => {
                         const uploadProgress = Math.round((progressEvent.loaded * 50) / progressEvent.total);
                         setProgress(uploadProgress);
@@ -97,7 +91,7 @@ const FileRender = () => {
         if (!originalFileContent) return null;
 
         return (
-            <div className="px-4 pt-40 bg-white shadow rounded-lg overflow-auto max-h-[120vh]">
+            <div className="px-4 pt-32 bg-white shadow overflow-auto rounded-lg max-h-[120vh]">
                 <div className="flex flex-row">
                     <h1 className="w-full max-w-4 text-2xl font-semibold text-gray-700 mb-4 pb-2">Uploaded File Content</h1>
 
@@ -223,7 +217,7 @@ const FileRender = () => {
                         <div className="md:w-1/2 bg-white flex items-center justify-center border">
                             {/* Render CorrectedFileRender if corrected file name is available */}
                             {!correctedFileName && (
-                                <div className="w-full h-full px-4 pt-24 bg-white shadow rounded-lg overflow-auto max-h-[120vh]">
+                                <div className="w-full h-full px-4 pt-16 bg-white shadow rounded-lg overflow-auto max-h-[120vh]">
                                     <div className="flex flex-row">
                                         <h1 className="w-full max-w-4 text-2xl font-semibold text-gray-700 mb-4 pb-2">Corrected File Content</h1>
                                     </div>

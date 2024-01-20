@@ -28,7 +28,6 @@ const AdminPackageModal = () => {
         package_description: ''
     });
 
-    const storedToken = localStorage.getItem('token');
     const [name, setName] = useState('');
     const [period, setPeriod] = useState('');
     const [docs, setDocs] = useState('');
@@ -84,7 +83,6 @@ const AdminPackageModal = () => {
                 return;
             }
 
-
             // Make API request to update password
             const response = await api.put(`/admin/update_package/${packageId}`, {
                 package_name: name,
@@ -117,7 +115,7 @@ const AdminPackageModal = () => {
 
     return (
         <div className="flex flex-col h-screen bg-gray-100">
-            <AdminNavBar />
+            <AdminNavBar/>
 
             <main className="pt-24 flex items-center justify-center h-full overflow-auto">
                 <div className="container mx-auto mt-32">
@@ -154,8 +152,8 @@ const AdminPackageModal = () => {
                                     />
                                 </div>
 
-                                {/* ... (Repeat the structure for other input fields) ... */}
-                                                            <div>
+                            {/* ... (Repeat the structure for other input fields) ... */}
+                            <div>
                                 <label htmlFor="period" className="block text-sm font-medium text-gray-600">
                                     Package Period:
                                 </label>

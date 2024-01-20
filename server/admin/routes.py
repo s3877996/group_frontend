@@ -1,7 +1,6 @@
 from flask import Blueprint
 from ..auth.auth_middleware import token_required
 from .services import (\
-        add_package_service, \
         get_all_packages_service, \
         get_package_by_id_service, \
         update_package_by_id_service, \
@@ -13,13 +12,6 @@ from .services import (\
 from ..auth.auth_middleware import token_required
 
 admins = Blueprint('admin', __name__)
-
-# Manage subscriptions
-# Add package
-# @admins.route('/admin/add_package', methods=['POST'])
-# @token_required(required_role='admin')
-# def add_package():
-#     return add_package_service()
 
 # Get all packages
 @admins.route('/admin/get_all_packages', methods=['GET'])
@@ -50,16 +42,6 @@ def delete_package_by_id(current_user, package_id):
 @token_required(required_role='admin')
 def get_all_users(current_user):
     return get_all_users_service(current_user)
-
-# @admins.route('/admin/get_users_by_package_id/<int:package_id>', methods=['GET'])
-# @token_required(required_role='admin')
-# def get_users_by_package_id(package_id):
-#     return get_users_by_package_id_service(package_id)
-
-# @admins.route('/admin/get_users_by_package_name', methods=['GET'])
-# @token_required(required_role='admin')
-# def get_users_by_package_name():
-#     return get_users_by_package_name_service()
 
 @admins.route('/admin/get_subscriptions_count', methods=['GET'])
 @token_required(required_role='admin')
