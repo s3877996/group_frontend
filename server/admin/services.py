@@ -145,12 +145,12 @@ def update_package_by_id_service(id):
                         409  # Conflict
                     )
 
-                package_with_existed_period = Package.query.filter_by(package_period=package_period).first()
-                if package_with_existed_period and package.package_period != package_period:
-                    return make_response(
-                        {"message": "Package period already exists"},
-                        409  # Conflict
-                    )
+                # package_with_existed_period = Package.query.filter_by(package_period=package_period).first()
+                # if package_with_existed_period and package.package_period != package_period:
+                #     return make_response(
+                #         {"message": "Package period already exists"},
+                #         409  # Conflict
+                #     )
 
                 # Update package
                 package.package_name = package_name
