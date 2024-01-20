@@ -1,7 +1,7 @@
 // api.js
 import axios from 'axios';
 
-const baseURL = process.env.REACT_APP_API_BASE_URL || 'https://api.thptlethuy.online/?fbclid=IwAR0FNGHV2r9FSqCxKM04M1LVikeEH1Yqgx0jpQd0yaIT7WGJw6aVKBZCONo';
+const baseURL = process.env.REACT_APP_API_BASE_URL || 'https://api.thptlethuy.online/?fbclid=IwAR1c1bhSa_qRg71PsqdldTprmdtr-M40K8BmekRkm8WSkxkzuqUaycdUAOw';
 
 const api = axios.create({
   baseURL,
