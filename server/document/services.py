@@ -170,27 +170,48 @@ def create_corrected_docx(original_file_path, corrected_paragraphs):
     return corrected_file_path
 
 # Get all document by user ID
-def get_all_documents_of_user_service(user_id):
+def get_all_documents_of_user_service(user_id, page, per_page):
     try:
-        documents = Document.query.filter_by(user_id=user_id).all()
-        if documents:
+        documents = Document.query.filter_by(user_id=user_id).paginate(page=page, per_page=per_page, error_out=False)
+
+        if documents.items:
             return make_response(
-                documents_schema.jsonify(documents),
+                documents_schema.jsonify(documents.items),
                 200
             )
         else:
             return make_response(
                 {"message": "No documents found"},
-                404 # Not Found
+                404  # Not Found
             )
-        
     except Exception as e:
         print(e)
         db.session.rollback()
         return make_response(
             {"message": "Unable to find all documents"},
-            400 # Bad Request
+            400  # Bad Request
         )
+# def get_all_documents_of_user_service(user_id):
+#     try:
+#         documents = Document.query.filter_by(user_id=user_id).all()
+#         if documents:
+#             return make_response(
+#                 documents_schema.jsonify(documents),
+#                 200
+#             )
+#         else:
+#             return make_response(
+#                 {"message": "No documents found"},
+#                 404 # Not Found
+#             )
+#
+#     except Exception as e:
+#         print(e)
+#         db.session.rollback()
+#         return make_response(
+#             {"message": "Unable to find all documents"},
+#             400 # Bad Request
+#         )
 
 # Get document of a user by document ID
 def get_document_of_user_by_id_service(user_id, document_id):
@@ -206,7 +227,8 @@ def get_document_of_user_by_id_service(user_id, document_id):
                 {"message": "Document not found"},
                 404 # Not Found
             )
-        
+
+
     except Exception as e:
         print(e)
         db.session.rollback()

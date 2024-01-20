@@ -126,7 +126,10 @@ def download_corrected_document(filename):
 @documents.route('/user_documents', methods=['GET'])
 @token_required(required_role='user')
 def get_all_documents_of_user(current_user):
-    return get_all_documents_of_user_service(current_user.user_id) 
+    page = request.args.get('page', default=1, type=int)
+    per_page = 5  # Set the number of documents per page
+    return get_all_documents_of_user_service(current_user.user_id, page, per_page)
+    # return get_all_documents_of_user_service(current_user.user_id)
 
 # Get document by id
 @documents.route('/user_documents/document/<int:document_id>', methods=['GET'])
