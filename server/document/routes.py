@@ -33,6 +33,11 @@ def upload(current_user):
     can_upload, message = Subscription.can_upload_document(current_user.user_id)
     if not can_upload:
         return jsonify({"error": message}), 403
+    
+    # Fetch the current subscription to update available documents
+    current_subscription = Subscription.query.filter_by(user_id=current_user.user_id).order_by(Subscription.start_time.desc()).first()
+    if current_subscription is None or current_subscription.available_doc <= 0:
+        return jsonify({"error": "No available documents in your subscription"}), 403
 
     if 'file' not in request.files:
         return jsonify(error="No file part"), 400
@@ -65,6 +70,10 @@ def upload(current_user):
 
             original_file_url = request.url_root + 'upload-files/' + filename
             corrected_file_url = request.url_root + 'download-files/' + corrected_file_name
+
+            if current_subscription:
+                current_subscription.available_doc -= 1
+                db.session.commit()
 
             # Create and save the document metadata in the database
             new_document = Document(
