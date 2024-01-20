@@ -91,7 +91,7 @@ const FileRender = () => {
         if (!originalFileContent) return null;
 
         return (
-            <div className="px-4 pt-40 bg-white shadow rounded-lg overflow-auto max-h-[120vh]">
+            <div className="px-4 pt-32 bg-white shadow overflow-auto rounded-lg max-h-[120vh]">
                 <div className="flex flex-row">
                     <h1 className="w-full max-w-4 text-2xl font-semibold text-gray-700 mb-4 pb-2">Uploaded File Content</h1>
 
@@ -161,7 +161,7 @@ const FileRender = () => {
     };
     
     return (
-        <div className="flex flex-col overflow-auto">
+        <div className="flex flex-col">
             <main className="flex-grow bg-white-700 overflow-auto">
                 <div className="mx-auto max-w-screen-xl h-full w-full">
                     <div className="flex flex-col md:flex-row min-h-screen justify-center">
@@ -217,7 +217,7 @@ const FileRender = () => {
                         <div className="md:w-1/2 bg-white flex items-center justify-center border">
                             {/* Render CorrectedFileRender if corrected file name is available */}
                             {!correctedFileName && (
-                                <div className="w-full h-full px-4 pt-24 bg-white shadow rounded-lg overflow-auto max-h-[120vh]">
+                                <div className="w-full h-full px-4 pt-16 bg-white shadow rounded-lg overflow-auto max-h-[120vh]">
                                     <div className="flex flex-row">
                                         <h1 className="w-full max-w-4 text-2xl font-semibold text-gray-700 mb-4 pb-2">Corrected File Content</h1>
                                     </div>
