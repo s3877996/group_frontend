@@ -76,9 +76,9 @@ const AdminPackageModal = () => {
             }
 
             // Validate package period
-            const periodRegex = /^([1-9]|1\d|2[0-9]|30)\s+days$/; // Regular expression for "number + days"
+            const periodRegex = /^((\d+)\s+days|([1-9]|1[0-2])\s+months?)$/; // Regex for "number + days" or "number + months"
             if (!period || !periodRegex.test(period.trim())) {
-                toast.error("Please enter a valid package period (e.g., 5 days). The number should be between 1 and 30.", {
+                toast.error("Please enter a valid package period (e.g., '5 days' or '1 month').\nFor days, the number should be between 1 and 30. For months, the number should be between 1 and 12.", {
                     duration: 3000,
                 });
                 return;
