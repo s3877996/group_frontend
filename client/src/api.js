@@ -1,7 +1,7 @@
 // api.js
 import axios from 'axios';
 
-const baseURL = process.env.REACT_APP_API_BASE_URL || 'https://api.thptlethuy.online/?fbclid=IwAR1c1bhSa_qRg71PsqdldTprmdtr-M40K8BmekRkm8WSkxkzuqUaycdUAOw';
+const baseURL = process.env.REACT_APP_API_BASE_URL || 'https://test-prosepiilot-6400eed6d5a7.herokuapp.com/';
 
 const api = axios.create({
   baseURL,
