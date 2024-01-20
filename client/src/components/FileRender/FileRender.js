@@ -161,7 +161,7 @@ const FileRender = () => {
     };
     
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col overflow-auto">
             <main className="flex-grow bg-white-700 overflow-auto">
                 <div className="mx-auto max-w-screen-xl h-full w-full">
                     <div className="flex flex-col md:flex-row min-h-screen justify-center">
