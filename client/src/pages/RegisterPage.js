@@ -54,7 +54,8 @@ const RegisterPage = () => {
     }
 
     try {
-      const response = await axios.post('https://group-frontend-arch-2024.vercel.app/document/download/api/register', {
+      
+      const response = await axios.post('https://group-frontend-arch-2024.vercel.app/api/register', {
         username: username,
         user_email: email,
         user_password: password,
