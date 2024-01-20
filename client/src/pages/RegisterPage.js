@@ -9,7 +9,7 @@ const validate = (data, regex) => {
 };
 
 const validatePassword = (password) => {
-api  const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$/;
+  const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$/;
   return validate(password, reg);
 };
 
