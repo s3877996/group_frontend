@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import axios from 'axios';
+//import axios from 'axios';
+import api from "../../api";
 import CorrectedFileRender from './CorrectedFileRender';
 
 const FileRender = () => {
@@ -14,11 +15,7 @@ const FileRender = () => {
 
     const checkProcessingStatus = async () => {
         try {
-            const statusResponse = await axios.get('http://127.0.0.1:5000/document/processing-status', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
+            const statusResponse = await api.get('document/processing-status');
 
             const { status, progress: processingProgress } = statusResponse.data;
             const totalProgress = 50 + (processingProgress / 2);
@@ -50,10 +47,7 @@ const FileRender = () => {
 
             //Upload file to the backend and process it
             try {
-                const response = await axios.post('http://127.0.0.1:5000/document/upload', formData, {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`  // Include the auth token in the request header
-                    },
+                const response = await api.post('document/upload', formData, {
                     onUploadProgress: (progressEvent) => {
                         const uploadProgress = Math.round((progressEvent.loaded * 50) / progressEvent.total);
                         setProgress(uploadProgress);
