@@ -31,7 +31,7 @@ const DocumentViewerPage = () => {
                 <Navbar/>
   
                     <div className="flex items-stretch justify-center h-screen">
-                        <div className="self-center">
+                        <div className="pt-24 self-center max-h-[120vh] md:max-h-[90vh] lg:max-h-[80vh] sm:w-3/4 lg:w-1/2">
                             <CorrectedFileRender 
                                 correctedFileName={correctedFileName} 
                                 correctedFileContent={correctedFileContent} 
